@@ -1,0 +1,19 @@
+{% from '__helpers.html' import form_generate %}
+
+<div class="register-container">
+    {{ form_generate(form=form, action='/auth/register') }}
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    <div class="auth-links">
+        <p>Есть аккаунт?<a href="{{ url_for('login_page') }}">Войти</a></p>
+    </div>
+</div>
