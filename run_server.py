@@ -1,4 +1,5 @@
-from server import app, up
+from server import app, up, migrate
 
-up()
+# up()
+# migrate()
 #uvicorn run_server:app --reload

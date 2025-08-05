@@ -12,5 +12,6 @@ class User(Base):
     name: Mapped[str] = mapped_column(String(150))
     password: Mapped[str] = mapped_column(String(255))
     joined: Mapped[DateTime] = mapped_column(DateTime, default=datetime.now)
+    role: Mapped[str] = mapped_column(default='user')
 
     tasks: Mapped[List['Task']] = relationship('Task', back_populates='user', cascade='all, delete-orphan')
