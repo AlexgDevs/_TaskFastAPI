@@ -9,12 +9,14 @@ from ..db import Session, User
 from .. import app
 
 @app.get('/auth/register')
+@required_not_authenticated
 def register_page():
     form = RegisterForm()
     return render_template('register.html', form=form)
 
 
 @app.get('/auth/login')
+@required_not_authenticated
 def login_page():
     form = LoginForm()
     return render_template('login.html', form=form)
@@ -52,13 +54,14 @@ def register():
 
 
 @app.post('/auth/login')
+@required_not_authenticated
 def login():
     form = LoginForm()
     if form.validate_on_submit():
         with Session() as session:
             user = session.scalar(select(User).where(User.name == form.name.data))
             if user:
-                if check_password_hash(user.password, form.password):
+                if check_password_hash(user.password, form.password.data):
                     login_user(LoginUser(id=user.id, name=user.name, role=user.role))
                     flash('Вы успешно вошли в аккаунт!', 'info')
                     return redirect(url_for('main'))
