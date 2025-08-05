@@ -52,8 +52,8 @@ def get_tasks_by_user_id(user_id: int):
             )
 
 
-@task_app.get('/{task_id}/{user_id}')
-def get_task_by_user_id(task_id: int, user_id: int):
+@task_app.get('/{user_id}/{task_id}')
+def get_task_by_user_id(user_id: int, task_id: int):
     with Session() as session:
         task = session.scalar(select(Task).where(
             Task.id == task_id, Task.user_id == user_id))

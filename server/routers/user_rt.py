@@ -38,7 +38,7 @@ def get_users_by_id(user_id: int):
 
 
 @user_app.patch('/{user_id}')
-def put_user(user_id: int, user_data: UserPatchUpdate):
+def patch_user(user_id: int, user_data: UserPatchUpdate):
     with Session.begin() as session:
         user = session.scalar(select(User).where(User.id == user_id))
         if user:
