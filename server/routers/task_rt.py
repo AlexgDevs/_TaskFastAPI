@@ -21,7 +21,7 @@ task_app = APIRouter(prefix='/tasks', tags=['Tasks'])
 def get_tasks():
     with Session() as session:
         tasks = session.scalars(select(Task)).all()
-        return [TaskResponse.model_dump(task) for task in tasks]
+        return tasks
 
 
 @task_app.get('/{task_id}', response_model=TaskResponse)
@@ -29,7 +29,7 @@ def get_task_by_id(task_id: int):
     with Session() as session:
         task = session.scalar(select(Task).where(Task.id == task_id))
         if task:
-            return TaskResponse.model_dump(task)
+            return task
 
         else:
             raise HTTPException(

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<body>
+    {% block nav %}
+    <div class="nav-container">
+        <h1 class="logo nav-items">
+            LOGO
+        </h1>
+        <ul class="nav-items">
+            <li class="nav__item"><a href="#">Создать задачу</a></li>
+            <li class="nav__item"><a href="#">Создать новый тэг</a></li>
+            <li class="nav__item"><a href="#">Тэги</a></li>
+            {% if current_user.role == 'admin' %}
+                <li class="nav__item"><a href="#">Список пользователей</a></li>
+                <li class="nav__item"><a href="#">Назначить админом</a></li>
+            {% endif %}
+        </ul>
+        <ul class="nav-items">
+            <li class="nav__item"><a href="">Выйти</a></li>
+            <li class="nav__item"><a href="">Настройки профиля</a></li>
+        </ul>
+    </div>
+    {% endblock %}
+    {% block content %}
+        <div class="user-about">
+            <span>Присоединился: {{ user.joined.strftime('%d.%m %Y') }}</span>
+            <span>Выполненых заданий: 0</span>
+        </div>
+        <div class="line-bar-menu">
+            <summary class="drop__trigger">
+                <span>Фильтры</span>
+            </summary>
+            <ul class="dropdown__list">
+                <li><a href="/tasks?filter=active" class="dropdown__link">Активные задачи</a></li>
+                <li><a href="/tasks?filter=completed" class="dropdown__link">Завершенные</a></li>
+                <li><a href="/tasks?filter=process" class="dropdown__link">Не начатые</a></li>
+                <li><a href="/tasks?filter=expired" class="dropdown__link">Готовые</a></li>
+            </ul>
+        </div>
+        <div class="task-columns">
+            <div class="no-active-coulmn coulmn">
+                {% if no_active_tasks %}
+                    {% for task in no_active_tasks %}
+                        <div class="task-container">
+                            <div class="task-container__header">
+                                {{ task.get('title') }} | 0
+                            </div>
+                            <div class="task-container__body">
+                                {{ task.get('description') }}
+                                {{ task.get('created_at') }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <span>Отсутствуют</span>
+                {% endif %}
+            </div>
+            <div class="in-process-coulmn coulmn">
+                {% if in_process_tasks %}
+                    {% for task in in_process_tasks %}
+                        <div class="task-container">
+                            <div class="task-container__header">
+                                {{ task.get('title') }} | 0
+                            </div>
+                            <div class="task-container__body">
+                                {{ task.get('description') }}
+                                {{ task.get('created_at') }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <span>Отсутствуют</span>
+                {% endif %}
+            </div>
+            <div class="under-review-coulmn coulmn">
+                {% if under_review_tasks %}
+                    {% for task in  under_review_tasks %}
+                        <div class="task-container">
+                            <div class="task-container__header">
+                                {{ task.get('title') }} | 0
+                            </div>
+                            <div class="task-container__body">
+                                {{ task.get('description') }}
+                                {{ task.get('created_at') }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <span>Отсутствуют</span>
+                {% endif %}
+            </div>
+            <div class="done-coulmn coulmn">
+                {% if done_tasks %}
+                    {% for task in done_tasks %}
+                        <div class="task-container">
+                            <div class="task-container__header">
+                                {{ task.get('title') }} | 0
+                            </div>
+                            <div class="task-container__body">
+                                {{ task.get('description') }}
+                                {{ task.get('created_at') }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <span>Отсутствуют</span>
+                {% endif %}
+            </div>
+        </div>
+    {% endblock %}
+    {% block scripts %}
+    {% endblock %}
+</body>
+</html>
