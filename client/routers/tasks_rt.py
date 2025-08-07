@@ -1,0 +1,36 @@
+from flask import flash, redirect, render_template, url_for
+from flask_login import current_user, login_required
+import requests
+
+from ..schemas import TaskForm
+from .. import app, API_URL
+
+
+@app.get('/tasks')
+@login_required
+def task_page():
+    form = TaskForm()
+    return render_template('create_task.html', form=form)
+
+
+@app.post('/tasks')
+@login_required
+def task():
+    form = TaskForm()
+    if form.validate_on_submit():
+        data = {
+            'title': form.title.data,
+            'description': form.description.data,
+            'user_id': current_user.id
+        }
+
+        response = requests.post(f'{API_URL}/tasks', json=data)
+        if response.status_code == 201:
+            flash('Вы успешно создали задачу!', 'info')
+            return redirect(url_for('main'))
+        
+        else:
+            flash('Не удалось создать заметку. Попробуйте еще раз', 'error')
+            return render_template('create_task.html', form=form)
+
+    return render_template('create_task.html', form=form)

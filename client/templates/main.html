@@ -28,42 +28,66 @@
 
 {% block scripts %}
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('.task-card').forEach(card => {
-        card.addEventListener('click', function() {
-            const taskData = {
-                description: this.dataset.description,
-                created_at: this.dataset.createdAt,
-                status: this.dataset.status
-            };
+    document.getElementById('filterBtn').addEventListener('click', function() {
+            document.getElementById('filterDropdown').classList.toggle('show');
+        });
+        
+        window.addEventListener('click', function(event) {
+            if (!event.target.matches('.filter-btn')) {
+                const dropdown = document.getElementById('filterDropdown');
+                if (dropdown.classList.contains('show')) {
+                    dropdown.classList.remove('show');
+                }
+            }
+        });
+
+        // MODAL
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Находим все элементы
+    const taskCards = document.querySelectorAll('.task-card');
+    const modals = document.querySelectorAll('.modal-overlay');
+    const closeButtons = document.querySelectorAll('.modal-close');
+
+    // Показываем модальное окно при клике на карточку
+    taskCards.forEach((card, index) => {
+        card.addEventListener('click', () => {
+            // Скрываем все модальные окна
+            modals.forEach(modal => modal.style.display = 'none');
             
-            const modalContent = `
-                <div>${taskData.description}</div>
-                <span><strong>Время создания: ${taskData.created_at}</strong></span>
-                <span><strong>Статус: ${taskData.status}</strong></span>
-            `;
-            
-            document.getElementById('modal-content').innerHTML = modalContent;
-            document.getElementById('task-modal-window').style.display = 'block';
+            // Показываем соответствующее модальное окно
+            if (modals[index]) {
+                modals[index].style.display = 'flex';
+            }
         });
     });
 
-    document.querySelector('.close-modal').addEventListener('click', function() {
-        document.getElementById('task-modal-window').style.display = 'none';
+    // Закрытие модального окна
+    function closeAllModals() {
+        modals.forEach(modal => modal.style.display = 'none');
+    }
+
+    // Закрытие по крестику
+    closeButtons.forEach(btn => {
+        btn.addEventListener('click', closeAllModals);
     });
 
-    window.addEventListener('click', function(event) {
-        if (event.target === document.getElementById('task-modal-window')) {
-            document.getElementById('task-modal-window').style.display = 'none';
+    // Закрытие по клику на фон
+    modals.forEach(modal => {
+        modal.addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeAllModals();
+            }
+        });
+    });
+
+    // Закрытие по ESC
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeAllModals();
         }
     });
-
-    const filterBtn = document.getElementById('filterBtn');
-    const filterDropdown = document.getElementById('filterDropdown');
-    
-    filterBtn.addEventListener('click', function() {
-        filterDropdown.style.display = filterDropdown.style.display === 'block' ? 'none' : 'block';
-    });
 });
+
 </script>
 {% endblock %}

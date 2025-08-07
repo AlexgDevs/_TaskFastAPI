@@ -1,5 +1,5 @@
 {% macro form_generate(form, action='') %}
-<form action="{{ action }}" method="post">
+<form action="{{ action }}" method="post" novalidate>
     {{ form.hidden_tag() }}
     {% for field in form if field.widget.input_type != 'hidden' %}
     {% if field.widget.input_type != "submit" %}
@@ -26,17 +26,33 @@
 {% macro task_generate(tasks, status='') %}
 <div class="{{ status }}-column column">
     <div class="column-header">
-        {% if status == 'not_started' %}Не начатые
-        {% elif status == 'in_progress' %}В работе
-        {% elif status == 'in_review' %}На проверке
-        {% elif status == 'done' %}Завершённые
+        {% if status == 'not_started' %} Не начатые
+        {% elif status == 'in_progress' %} В работе
+        {% elif status == 'in_review' %} На проверке
+        {% elif status == 'done' %} Завершённые
         {% endif %}
     </div>
     {% if tasks %}
     {% for task in tasks %}
-    <div class="task-card" data-description="{{ task.get('description') }}"
-        data-created-at="{{ task.get('created_at') }}" data-status="{{ task.get('status') }}">
+    <div class="task-card">
         {{ task.get('title') }}
+    </div>
+    <div class="modal-overlay">
+        <div class="task-card-modal">
+            <span class="modal-close">&times;</span>
+            <div class="modal-content">
+                {{ task.get('description') }}
+                <span class="modal-date">{{ task.get('created_at') }}</span>
+            </div>
+            <div class="modal-actions">
+                <form action="/tasks/change_status" method="post">
+                    <button type="submit" class="modal-btn">Сменить статус</button>
+                </form>
+                <form action="/tasks/change_about" method="post">
+                    <button type="submit" class="modal-btn">Изменить другое</button>
+                </form>
+            </div>
+        </div>
     </div>
     {% endfor %}
     {% else %}
