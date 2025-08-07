@@ -16,6 +16,7 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
+
 class LoginUser(UserMixin):
     def __init__(self, id, name, role):
         self.id = id
@@ -41,7 +42,7 @@ def admin_requried(f):
     @wraps(f)
     def wrapper(*arg, **kwarg):
         if not current_user.is_authenticated or \
-            not current_user.role == 'admin':
+                not current_user.role == 'admin':
             return redirect(url_for('main'))
         return f(*arg, **kwarg)
     return wrapper
@@ -54,5 +55,3 @@ def required_not_authenticated(f):
             return redirect(url_for('main'))
         return f(*arg, **kwarg)
     return wrapper
-
-

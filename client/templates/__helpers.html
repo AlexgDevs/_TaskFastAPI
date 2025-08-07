@@ -2,22 +2,45 @@
 <form action="{{ action }}" method="post">
     {{ form.hidden_tag() }}
     {% for field in form if field.widget.input_type != 'hidden' %}
-        {% if field.widget.input_type != "submit" %}
-        <div class="field">
-            {{ field.label }} {{ field }}
-        </div> 
-        {% else %}
-        <div class="field">
-            {{ field }}
-        </div> 
-        {% endif %}
-        {% if field.errors %}
-            {% for error in field.errors %}
-                <div class="field_error">
-                    <strong>{{ error }}</strong>
-                </div>
-            {% endfor %}
-        {% endif %}
+    {% if field.widget.input_type != "submit" %}
+    <div class="field">
+        {{ field.label }} {{ field }}
+    </div>
+    {% else %}
+    <div class="field">
+        {{ field }}
+    </div>
+    {% endif %}
+    {% if field.errors %}
+    {% for error in field.errors %}
+    <div class="field_error">
+        <strong>{{ error }}</strong>
+    </div>
+    {% endfor %}
+    {% endif %}
     {% endfor %}
 </form>
+{% endmacro %}
+
+
+{% macro task_generate(tasks, status='') %}
+<div class="{{ status }}-column column">
+    <div class="column-header">
+        {% if status == 'not_started' %}Не начатые
+        {% elif status == 'in_progress' %}В работе
+        {% elif status == 'in_review' %}На проверке
+        {% elif status == 'done' %}Завершённые
+        {% endif %}
+    </div>
+    {% if tasks %}
+    {% for task in tasks %}
+    <div class="task-card" data-description="{{ task.get('description') }}"
+        data-created-at="{{ task.get('created_at') }}" data-status="{{ task.get('status') }}">
+        {{ task.get('title') }}
+    </div>
+    {% endfor %}
+    {% else %}
+    <div class="disabeld-text">Отсутствуют</div>
+    {% endif %}
+</div>
 {% endmacro %}

@@ -19,7 +19,7 @@ user_app = APIRouter(prefix='/users', tags=['Users'])
 def get_users():
     with Session() as session:
         users = session.scalars(select(User)).all()
-        users_data = [UserResponse.model_dump(user) for user in users]
+        users_data = [UserResponse.model_validate(user) for user in users]
         return users_data
 
 
@@ -28,7 +28,7 @@ def get_users_by_id(user_id: int):
     with Session() as session:
         user = session.scalar(select(User).where(User.id == user_id))
         if user:
-            return UserResponse.model_dump(user)
+            return UserResponse.model_validate(user)
 
         else:
             raise HTTPException(

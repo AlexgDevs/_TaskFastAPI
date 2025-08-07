@@ -1,11 +1,69 @@
 {% extends '__base.html' %}
+{% from '__helpers.html' import task_generate %}
 
-{% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-        {% for category, message in messages %}
-            <div class="alert alert-{{ category }}">
-                {{ message }}
-            </div>
-        {% endfor %}
-    {% endif %}
-    {% endwith %}
+
+{% block content %}
+<div class="user-about">
+    <span>Присоединился: {{ user.joined.strftime('%d.%m.%Y') }}</span>
+    <span>Выполнено задач: 0</span>
+</div>
+
+<div class="filter-container">
+    <button class="filter-btn" id="filterBtn">Фильтры</button>
+    <div class="filter-dropdown" id="filterDropdown">
+        <a href="?status=not_started" class="filter-item">Не начатые</a>
+        <a href="?status=in_progress" class="filter-item">В работе</a>
+        <a href="?status=in_review" class="filter-item">На проверке</a>
+        <a href="?status=done" class="filter-item">Завершённые</a>
+    </div>
+</div>
+
+<div class="task-columns">
+    {{ task_generate(sorted_tasks.get('not_started'), 'not_started') }}
+    {{ task_generate(sorted_tasks.get('in_progress'), 'in_progress') }}
+    {{ task_generate(sorted_tasks.get('in_review'), 'in_review') }}
+    {{ task_generate(sorted_tasks.get('done'), 'done') }}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.task-card').forEach(card => {
+        card.addEventListener('click', function() {
+            const taskData = {
+                description: this.dataset.description,
+                created_at: this.dataset.createdAt,
+                status: this.dataset.status
+            };
+            
+            const modalContent = `
+                <div>${taskData.description}</div>
+                <span><strong>Время создания: ${taskData.created_at}</strong></span>
+                <span><strong>Статус: ${taskData.status}</strong></span>
+            `;
+            
+            document.getElementById('modal-content').innerHTML = modalContent;
+            document.getElementById('task-modal-window').style.display = 'block';
+        });
+    });
+
+    document.querySelector('.close-modal').addEventListener('click', function() {
+        document.getElementById('task-modal-window').style.display = 'none';
+    });
+
+    window.addEventListener('click', function(event) {
+        if (event.target === document.getElementById('task-modal-window')) {
+            document.getElementById('task-modal-window').style.display = 'none';
+        }
+    });
+
+    const filterBtn = document.getElementById('filterBtn');
+    const filterDropdown = document.getElementById('filterDropdown');
+    
+    filterBtn.addEventListener('click', function() {
+        filterDropdown.style.display = filterDropdown.style.display === 'block' ? 'none' : 'block';
+    });
+});
+</script>
+{% endblock %}
