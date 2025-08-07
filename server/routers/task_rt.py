@@ -17,19 +17,27 @@ from ..schemas import (
 task_app = APIRouter(prefix='/tasks', tags=['Tasks'])
 
 
-@task_app.get('/', response_model=List[TaskResponse])
+@task_app.get('/', response_model=List[TaskResponse]) # all
 def get_tasks():
     with Session() as session:
         tasks = session.scalars(select(Task)).all()
-        return tasks
+        return [TaskResponse.model_validate(task) for task in tasks]
 
 
-@task_app.get('/{task_id}', response_model=TaskResponse)
+@task_app.get('/{user_id}', response_model=List[TaskResponse]) #all
+def get_tasks_by_user_id(user_id: int):
+    with Session() as session:
+        tasks = session.scalars(select(Task).where(Task.user_id == user_id)).all()
+        if tasks:
+            return [TaskResponse.model_validate(task) for task in tasks]
+
+
+@task_app.get('/{task_id}', response_model=TaskResponse) # one
 def get_task_by_id(task_id: int):
     with Session() as session:
         task = session.scalar(select(Task).where(Task.id == task_id))
         if task:
-            return task
+            return TaskResponse.model_validate(task)
 
         else:
             raise HTTPException(
@@ -38,27 +46,13 @@ def get_task_by_id(task_id: int):
             )
 
 
-@task_app.get('/{user_id}')
-def get_tasks_by_user_id(user_id: int):
-    with Session() as session:
-        task = session.scalar(select(Task).where(Task.user_id == user_id))
-        if task:
-            return TaskResponse.model_dump(task)
-
-        else:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail='Task not found'
-            )
-
-
-@task_app.get('/{user_id}/{task_id}')
+@task_app.get('/{user_id}/{task_id}', response_model=TaskResponse) # one
 def get_task_by_user_id(user_id: int, task_id: int):
     with Session() as session:
         task = session.scalar(select(Task).where(
             Task.id == task_id, Task.user_id == user_id))
         if task:
-            return TaskResponse.model_dump(task)
+            return TaskResponse.model_validate(task)
 
         else:
             raise HTTPException(
@@ -67,7 +61,7 @@ def get_task_by_user_id(user_id: int, task_id: int):
             )
 
 
-@task_app.post('/', status_code=status.HTTP_201_CREATED)
+@task_app.post('/', status_code=status.HTTP_201_CREATED) #post
 def create_task(task_data: TaskCreate):
     with Session.begin() as session:
         new_task = Task(**task_data.model_dump())
@@ -75,7 +69,7 @@ def create_task(task_data: TaskCreate):
         return {'status': 'created'}
 
 
-@task_app.delete('/{task_id}')
+@task_app.delete('/{task_id}') # del
 def delete_task(task_id: int):
     with Session() as session:
         task = session.scalar(select(Task).where(Task.id == task_id))

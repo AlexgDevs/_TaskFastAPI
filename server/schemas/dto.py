@@ -2,7 +2,9 @@ from typing import Dict, Optional
 from pydantic import BaseModel, Field
 from datetime import datetime
 
+
 from sqlmodel import SQLModel
+
 
 class UserResponse(BaseModel):
     id: int
@@ -10,14 +12,7 @@ class UserResponse(BaseModel):
     role: str
 
 
-# class TaskResponse(BaseModel):
-#     title: str
-#     description: str
-#     created_at: str
-#     status: str
-
-
-class TaskResponse(SQLModel):
+class TaskResponse(BaseModel):
     id: int
     title: str 
     description: str 
