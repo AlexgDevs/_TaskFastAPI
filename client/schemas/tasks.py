@@ -1,5 +1,6 @@
+from datetime import datetime
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField
+from wtforms import StringField, SubmitField, PasswordField, DateTimeField, validators
 from wtforms.validators import Length, EqualTo, DataRequired
 
 
@@ -13,6 +14,11 @@ class TaskForm(FlaskForm):
         DataRequired(message='Обязательное поле'),
         Length(max=2048, message='Максимальное колличество символов - 2048')
     ]
+    )
+
+    dead_line = DateTimeField(
+        'Дедлайн задачи',
+        format='%Y.%m.%d',
     )
 
     submit = SubmitField('Создать')

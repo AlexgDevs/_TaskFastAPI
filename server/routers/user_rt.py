@@ -15,6 +15,7 @@ from ..schemas import (
 user_app = APIRouter(prefix='/users', tags=['Users'])
 
 
+# получение всех пользователей
 @user_app.get('/', response_model=List[UserResponse])
 def get_users():
     with Session() as session:
@@ -23,6 +24,7 @@ def get_users():
         return users_data
 
 
+# получение конкретного пользователя
 @user_app.get('/{user_id}', response_model=UserResponse)
 def get_users_by_id(user_id: int):
     with Session() as session:
@@ -37,6 +39,7 @@ def get_users_by_id(user_id: int):
             )
 
 
+# частичное обновление пользователя
 @user_app.patch('/{user_id}')
 def patch_user(user_id: int, user_data: UserPatchUpdate):
     with Session.begin() as session:
@@ -53,6 +56,7 @@ def patch_user(user_id: int, user_data: UserPatchUpdate):
             )
 
 
+# удаление пользователя
 @user_app.delete('/{user_id}')
 def delete_user(user_id: int):
     with Session.begin() as session:

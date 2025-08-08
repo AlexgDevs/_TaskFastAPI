@@ -1,6 +1,7 @@
 from typing import List
 from fastapi import APIRouter, HTTPException, Query, status
 from sqlalchemy import select
+from datetime import datetime
 
 from ..db import (
     Task,
@@ -14,9 +15,11 @@ from ..schemas import (
     TaskResponse
 )
 
+
 task_app = APIRouter(prefix='/tasks', tags=['Tasks'])
 
 
+# кароче получение всех тасков
 @task_app.get('/', response_model=List[TaskResponse])  # all
 def get_tasks():
     with Session() as session:
@@ -24,6 +27,7 @@ def get_tasks():
         return [TaskResponse.model_validate(task) for task in tasks]
 
 
+# получение всех тасков по конкретному пользователю
 @task_app.get('/{user_id}', response_model=List[TaskResponse])  # all
 def get_tasks_by_user_id(user_id: int, status: str = Query(None)):
     with Session() as session:
@@ -31,15 +35,16 @@ def get_tasks_by_user_id(user_id: int, status: str = Query(None)):
             tasks = session.scalars(select(Task).where(
                 Task.user_id == user_id,
                 Task.status == status
-                )).all()
+            )).all()
         else:
             tasks = session.scalars(select(Task).where(
                 Task.user_id == user_id,
-                )).all()
+            )).all()
 
         return [TaskResponse.model_validate(task) for task in tasks]
 
 
+# получение конкретного таска
 @task_app.get('/{task_id}', response_model=TaskResponse)  # one
 def get_task_by_id(task_id: int):
     with Session() as session:
@@ -54,6 +59,7 @@ def get_task_by_id(task_id: int):
             )
 
 
+# получение конкретного таска конкретного пользователя
 @task_app.get('/{user_id}/{task_id}', response_model=TaskResponse)  # one
 def get_task_by_user_id(user_id: int, task_id: int):
     with Session() as session:
@@ -69,6 +75,7 @@ def get_task_by_user_id(user_id: int, task_id: int):
             )
 
 
+# создание таска
 @task_app.post('/', status_code=status.HTTP_201_CREATED)  # post
 def create_task(task_data: TaskCreate):
     with Session.begin() as session:
@@ -77,6 +84,7 @@ def create_task(task_data: TaskCreate):
         return {'status': 'created'}
 
 
+# удаление таска
 @task_app.delete('/{task_id}')  # del
 def delete_task(task_id: int):
     with Session() as session:

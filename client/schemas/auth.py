@@ -12,9 +12,11 @@ class RegisterForm(FlaskForm):
     name = StringField(
         'Имя', validators=[
             DataRequired(message='Обязательное поле'),
-            Length(max=150, message='Максимальное кол-во символов -- 150')
-        ]
+            Length(max=150, message='Максимальное кол-во символов -- 150'),
+        ],
     )
+
+    # потом почта будет
 
     password = PasswordField(
         'Пароль', validators=[
@@ -30,8 +32,8 @@ class RegisterForm(FlaskForm):
         ]
     )
 
-    submit = SubmitField('Зарегестрироваться')
 
+    submit = SubmitField('Зарегестрироваться')
 
 class LoginForm(FlaskForm):
     name = StringField(
@@ -59,6 +61,8 @@ class ChangeProfileForm(FlaskForm):
             Length(max=150, message='Максимальное кол-во символов -- 150')
         ]
     )
+
+    # почта будет потом
 
     password = PasswordField(
         'Пароль для действия',

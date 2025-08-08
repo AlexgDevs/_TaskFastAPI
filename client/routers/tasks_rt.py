@@ -7,6 +7,7 @@ from ..schemas import TaskForm
 from .. import app, API_URL
 from ..db import Session, Task
 
+
 @app.get('/tasks')
 @login_required
 def task_page():
@@ -19,10 +20,12 @@ def task_page():
 def task():
     form = TaskForm()
     if form.validate_on_submit():
+
         data = {
             'title': form.title.data,
             'description': form.description.data,
-            'user_id': current_user.id
+            'dead_line': form.dead_line.data.strftime('%Y.%m.%d'),
+            'user_id': current_user.id,
         }
 
         response = requests.post(f'{API_URL}/tasks', json=data)

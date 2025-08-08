@@ -31,7 +31,7 @@ def register():
         with Session.begin() as session:
             user = session.scalar(select(User).where(User.name == form.name.data))
             if user:
-                flash('Имя пользователя занято', 'info')
+                flash('Имя пользователя занято', 'error')
                 return render_template('register.html', form=form)
 
             new_user = User(
@@ -67,10 +67,10 @@ def login():
                     flash('Вы успешно вошли в аккаунт!', 'info')
                     return redirect(url_for('main'))
                 else:
-                    flash('Неверный логин или пароль', 'info')
+                    flash('Неверный логин или пароль', 'error')
                     return render_template('login.html', form=form)
             else:
-                flash('Имя пользователя не найдено', 'info')
+                flash('Имя пользователя не найдено', 'error')
                 return render_template('login.html', form=form)
 
     else:
@@ -108,12 +108,11 @@ def change_profile_page():
 def change_profile():
     form = ChangeProfileForm()
     if form.validate_on_submit():
-
         with Session() as session:
             user = session.scalar(select(User).where(User.id == current_user.id))
             if user:
                 if not check_password_hash(user.password, form.password.data):
-                    flash('Неверный пароль')
+                    flash('Неверный пароль', 'error')
                     return render_template('profile_settings.html', form=form)
 
         data = {
@@ -122,7 +121,7 @@ def change_profile():
 
         response = requests.patch(f'{API_URL}/users/{current_user.id}', json=data)
 
-        flash('Успешно обновлено')
+        flash('Успешно обновлено', 'info')
         return redirect(url_for('change_profile_page'))
     
     return render_template('profile_settings.html', form=form)

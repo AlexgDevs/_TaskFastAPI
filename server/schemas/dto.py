@@ -3,21 +3,20 @@ from pydantic import BaseModel, Field
 from datetime import datetime
 from config import Config
 
-from sqlmodel import SQLModel
 
-
-class UserResponse(BaseModel):
+class UserResponse(BaseModel): # вывод пользователя
     id: int
     name: str
     role: str
 
 
-TaskStatus = Literal['not_started', 'in_progress', 'in_review', 'done']
-class TaskResponse(BaseModel):
+TaskStatus = Literal['not_started', 'in_progress', 'in_review', 'done', 'burned_down']
+class TaskResponse(BaseModel): # вывод задачи
     id: int
     title: str 
     description: str 
-    created_at: datetime 
+    created_at: datetime
+    dead_line: datetime
     status: TaskStatus
     user_id: int
 
