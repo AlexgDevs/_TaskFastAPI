@@ -1,4 +1,4 @@
-from flask import flash, redirect, render_template, url_for
+from flask import flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 import requests
 from sqlalchemy import select
@@ -42,5 +42,15 @@ def task():
 
 @app.post('/tasks/change_status')
 @login_required
-def change_status_task():
-    pass
+def change_status():
+    status = request.form.get('status')
+    task_id = request.form.get('task_id')
+
+    with Session.begin() as session:
+        task = session.scalar(select(Task).where(Task.id == int(task_id), Task.user_id == current_user.id))
+        if task:
+            task.status = status
+            flash('Статус обновлен', 'info')
+            return redirect(url_for('main'))
+
+        return redirect(url_for('main'))

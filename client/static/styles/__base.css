@@ -325,3 +325,107 @@
         gap: 8px;
     }
 }
+
+
+/* moadl btns status  */
+
+   /* Стили для кнопок в основном модальном окне */
+    .modal-actions {
+        display: flex;
+        gap: 12px;
+        padding: 16px 20px;
+        border-top: 1px solid var(--secondary-color);
+        background-color: rgba(9,30,66,0.04);
+    }
+
+    .modal-btn {
+        flex: 1;
+        padding: 8px 16px;
+        border-radius: 4px;
+        border: none;
+        background-color: var(--accent-color);
+        color: white;
+        cursor: pointer;
+        font-weight: 500;
+        transition: background-color 0.2s;
+    }
+
+    .modal-btn:hover {
+        background-color: #0040a0;
+    }
+
+    /* Стили для модального окна статусов */
+    .status-modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(9,30,66,0.5);
+        z-index: 3000;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .status-modal {
+        background-color: var(--primary-color);
+        width: 90%;
+        max-width: 400px;
+        border-radius: 8px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        padding: 24px;
+        position: relative;
+    }
+
+    .status-modal-close {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        cursor: pointer;
+        font-size: 24px;
+        color: var(--text-color);
+    }
+
+    .status-options {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 16px;
+    }
+
+    .status-option {
+        width: 100%;
+        padding: 12px;
+        border: none;
+        border-radius: 4px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+        text-align: center;
+    }
+
+    .status-option:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .in-progress {
+        background-color: var(--in-progress);
+        color: #5e6c84;
+    }
+
+    .in-review {
+        background-color: var(--in-review);
+        color: #5e6c84;
+    }
+
+    .done {
+        background-color: var(--done);
+        color: #5e6c84;
+    }
+
+    .not-started {
+        background-color: var(--not-started);
+        color: #5e6c84;
+    }

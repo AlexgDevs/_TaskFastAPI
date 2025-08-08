@@ -1,28 +1,3 @@
-{% macro form_generate(form, action='') %}
-<form action="{{ action }}" method="post" novalidate>
-    {{ form.hidden_tag() }}
-    {% for field in form if field.widget.input_type != 'hidden' %}
-    {% if field.widget.input_type != "submit" %}
-    <div class="field">
-        {{ field.label }} {{ field }}
-    </div>
-    {% else %}
-    <div class="field">
-        {{ field }}
-    </div>
-    {% endif %}
-    {% if field.errors %}
-    {% for error in field.errors %}
-    <div class="field_error">
-        <strong>{{ error }}</strong>
-    </div>
-    {% endfor %}
-    {% endif %}
-    {% endfor %}
-</form>
-{% endmacro %}
-
-
 {% macro task_generate(tasks, status='') %}
 <div class="{{ status }}-column column">
     <div class="column-header">
@@ -37,7 +12,9 @@
     <div class="task-card">
         {{ task.get('title') }}
     </div>
-    <div class="modal-overlay">
+
+    <!-- Основное модальное окно -->
+    <div class="modal-overlay" id="modal-{{ task.id }}">
         <div class="task-card-modal">
             <span class="modal-close">&times;</span>
             <div class="modal-content">
@@ -46,13 +23,49 @@
                 <span class="modal-date">{{ task.get('created_at') }}</span>
             </div>
             <div class="modal-actions">
+                <button type="button" class="modal-btn modal-btn-open-status" data-task-id="{{ task.id }}">Сменить
+                    статус</button>
+                <button type="button" class="modal-btn">Изменить другое</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно смены статуса -->
+    <div class="status-modal-overlay" id="status-modal-{{ task.id }}">
+        <div class="status-modal">
+            <span class="status-modal-close">&times;</span>
+            <div class="status-options">
+                {% if task.get('status') != 'in_progress' %}
                 <form action="/tasks/change_status" method="post">
+                    <input type="hidden" name="status" value="in_progress">
                     <input type="hidden" name="task_id" value="{{ task.get('id') }}">
-                    <button type="submit" class="modal-btn">Сменить статус</button>
+                    <button type="submit" class="status-option in-progress">В процессе</button>
                 </form>
-                <form action="/tasks/change_about" method="post">
-                    <button type="submit" class="modal-btn">Изменить другое</button>
+                {% endif %}
+
+                {% if task.get('status') != 'in_review' %}
+                <form action="/tasks/change_status" method="post">
+                    <input type="hidden" name="status" value="in_review">
+                    <input type="hidden" name="task_id" value="{{ task.get('id') }}">
+                    <button type="submit" class="status-option in-review">На проверке</button>
                 </form>
+                {% endif %}
+
+                {% if task.get('status') != 'done' %}
+                <form action="/tasks/change_status" method="post">
+                    <input type="hidden" name="status" value="done">
+                    <input type="hidden" name="task_id" value="{{ task.get('id') }}">
+                    <button type="submit" class="status-option done">Готово</button>
+                </form>
+                {% endif %}
+
+                {% if task.get('status') != 'not_started' %}
+                <form action="/tasks/change_status" method="post">
+                    <input type="hidden" name="status" value="not_started">
+                    <input type="hidden" name="task_id" value="{{ task.get('id') }}">
+                    <button type="submit" class="status-option not-started">Не начато</button>
+                </form>
+                {% endif %}
             </div>
         </div>
     </div>
