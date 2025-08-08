@@ -1,12 +1,13 @@
 from flask import flash, redirect, render_template, url_for
-from flask_login import login_required, login_user, logout_user
+from flask_login import current_user, login_required, login_user, logout_user
+import requests
 from sqlalchemy import select
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from ..schemas import RegisterForm, LoginForm
+from ..schemas import RegisterForm, LoginForm, ChangeProfileForm
 from ..utils import LoginUser, admin_requried, required_not_authenticated
 from ..db import Session, User
-from .. import app
+from .. import app, API_URL
 
 @app.get('/auth/register')
 @required_not_authenticated
@@ -93,3 +94,35 @@ def logout_accept():
 @login_required
 def logout_cancel():
     return redirect(url_for('main'))
+
+
+@app.get('/auth/profile/change-page')
+@login_required
+def change_profile_page():
+    form = ChangeProfileForm()
+    return render_template('profile_settings.html', form=form)
+
+
+@app.post('/auth/profile/change')
+@login_required
+def change_profile():
+    form = ChangeProfileForm()
+    if form.validate_on_submit():
+
+        with Session() as session:
+            user = session.scalar(select(User).where(User.id == current_user.id))
+            if user:
+                if not check_password_hash(user.password, form.password.data):
+                    flash('Неверный пароль')
+                    return render_template('profile_settings.html', form=form)
+
+        data = {
+            'name': form.name.data,
+        }
+
+        response = requests.patch(f'{API_URL}/users/{current_user.id}', json=data)
+
+        flash('Успешно обновлено')
+        return redirect(url_for('change_profile_page'))
+    
+    return render_template('profile_settings.html', form=form)

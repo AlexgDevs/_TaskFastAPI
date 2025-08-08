@@ -21,7 +21,6 @@ class TaskPatchUpdate(BaseModel):
 
 
 class UserPatchUpdate(BaseModel):
-    id: int | None = None
     name: str | None = None
     role: str | None = None
     password: str | None = None

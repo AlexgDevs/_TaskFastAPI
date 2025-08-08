@@ -28,66 +28,58 @@
 
 {% block scripts %}
 <script>
-    document.getElementById('filterBtn').addEventListener('click', function() {
-            document.getElementById('filterDropdown').classList.toggle('show');
-        });
-        
-        window.addEventListener('click', function(event) {
-            if (!event.target.matches('.filter-btn')) {
-                const dropdown = document.getElementById('filterDropdown');
-                if (dropdown.classList.contains('show')) {
-                    dropdown.classList.remove('show');
+    document.getElementById('filterBtn').addEventListener('click', function () {
+        document.getElementById('filterDropdown').classList.toggle('show');
+    });
+
+    window.addEventListener('click', function (event) {
+        if (!event.target.matches('.filter-btn')) {
+            const dropdown = document.getElementById('filterDropdown');
+            if (dropdown.classList.contains('show')) {
+                dropdown.classList.remove('show');
+            }
+        }
+    });
+
+    // MODAL
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const taskCards = document.querySelectorAll('.task-card');
+        const modals = document.querySelectorAll('.modal-overlay');
+        const closeButtons = document.querySelectorAll('.modal-close');
+
+        taskCards.forEach((card, index) => {
+            card.addEventListener('click', () => {
+                modals.forEach(modal => modal.style.display = 'none');
+
+                if (modals[index]) {
+                    modals[index].style.display = 'flex';
                 }
-            }
+            });
         });
 
-        // MODAL
-
-document.addEventListener('DOMContentLoaded', function() {
-    // Находим все элементы
-    const taskCards = document.querySelectorAll('.task-card');
-    const modals = document.querySelectorAll('.modal-overlay');
-    const closeButtons = document.querySelectorAll('.modal-close');
-
-    // Показываем модальное окно при клике на карточку
-    taskCards.forEach((card, index) => {
-        card.addEventListener('click', () => {
-            // Скрываем все модальные окна
+        function closeAllModals() {
             modals.forEach(modal => modal.style.display = 'none');
-            
-            // Показываем соответствующее модальное окно
-            if (modals[index]) {
-                modals[index].style.display = 'flex';
-            }
+        }
+
+        closeButtons.forEach(btn => {
+            btn.addEventListener('click', closeAllModals);
         });
-    });
 
-    // Закрытие модального окна
-    function closeAllModals() {
-        modals.forEach(modal => modal.style.display = 'none');
-    }
+        modals.forEach(modal => {
+            modal.addEventListener('click', function (e) {
+                if (e.target === this) {
+                    closeAllModals();
+                }
+            });
+        });
 
-    // Закрытие по крестику
-    closeButtons.forEach(btn => {
-        btn.addEventListener('click', closeAllModals);
-    });
-
-    // Закрытие по клику на фон
-    modals.forEach(modal => {
-        modal.addEventListener('click', function(e) {
-            if (e.target === this) {
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') {
                 closeAllModals();
             }
         });
     });
-
-    // Закрытие по ESC
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            closeAllModals();
-        }
-    });
-});
 
 </script>
 {% endblock %}

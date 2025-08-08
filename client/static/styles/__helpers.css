@@ -1,0 +1,118 @@
+/* Основные стили формы */
+* {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+
+.register-container {
+    max-width: 400px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.login-container {
+    max-width: 400px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.creating-task-container {
+    max-width: 400px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.profile-section-form {
+    max-width: 400px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.field label {
+    font-size: 0.95rem;
+    color: #172b4d;
+    font-weight: 500;
+}
+
+.field input:not([type="submit"]) {
+    padding: 0.75rem;
+    border: 1px solid #dfe1e6;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+}
+
+.field input:not([type="submit"]):focus {
+    border-color: #0052cc;
+    outline: none;
+    box-shadow: 0 0 0 1px #0052cc;
+}
+
+/* Стили кнопки */
+.field input[type="submit"] {
+    background: #0052cc;
+    color: white;
+    border: none;
+    padding: 0.75rem;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.field input[type="submit"]:hover {
+    background: #0065ff;
+}
+
+/* Стили ошибок */
+.field_error {
+    color: #de350b;
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+}
+
+/* Ссылки */
+.auth-links {
+    margin-top: 1.5rem;
+    text-align: center;
+    color: #5e6c84;
+    font-size: 0.95rem;
+}
+
+.auth-links a {
+    color: #0052cc;
+    text-decoration: none;
+    margin-left: 0.5rem;
+    font-weight: 500;
+}
+
+.auth-links a:hover {
+    text-decoration: underline;
+}
+

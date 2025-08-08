@@ -271,6 +271,7 @@
 .modal-content {
     padding: 20px;
     line-height: 1.5;
+    border: 1px solid #000;
     word-wrap: break-word;
     white-space: pre-wrap;
     overflow-wrap: break-word;
