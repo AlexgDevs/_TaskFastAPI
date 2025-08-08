@@ -47,6 +47,7 @@
             </div>
             <div class="modal-actions">
                 <form action="/tasks/change_status" method="post">
+                    <input type="hidden" name="task_id" value="{{ task.get('id') }}">
                     <button type="submit" class="modal-btn">Сменить статус</button>
                 </form>
                 <form action="/tasks/change_about" method="post">
@@ -57,7 +58,7 @@
     </div>
     {% endfor %}
     {% else %}
-    <div class="disabeld-text">Отсутствуют</div>
+    <div class="disabeld-text">-</div>
     {% endif %}
 </div>
 {% endmacro %}

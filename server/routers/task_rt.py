@@ -1,5 +1,5 @@
 from typing import List
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, Query, status
 from sqlalchemy import select
 
 from ..db import (
@@ -25,10 +25,17 @@ def get_tasks():
 
 
 @task_app.get('/{user_id}', response_model=List[TaskResponse])  # all
-def get_tasks_by_user_id(user_id: int):
+def get_tasks_by_user_id(user_id: int, status: str = Query(None)):
     with Session() as session:
-        tasks = session.scalars(select(Task).where(
-            Task.user_id == user_id)).all()
+        if status:
+            tasks = session.scalars(select(Task).where(
+                Task.user_id == user_id,
+                Task.status == status
+                )).all()
+        else:
+            tasks = session.scalars(select(Task).where(
+                Task.user_id == user_id,
+                )).all()
 
         return [TaskResponse.model_validate(task) for task in tasks]
 

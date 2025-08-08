@@ -10,9 +10,12 @@ from ..db import Session, Task, User
 @app.get('/')
 @login_required
 def main():
+
+    status = request.args.get('status')
+
     with Session() as session:
         user = session.scalar(select(User).where(User.id == current_user.id))
-        response = requests.get(f'{API_URL}/tasks/{user.id}')
+        response = requests.get(f'{API_URL}/tasks/{user.id}', params={'status': status})
 
         tasks = response.json()
 

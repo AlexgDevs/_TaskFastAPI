@@ -1,10 +1,11 @@
 from flask import flash, redirect, render_template, url_for
 from flask_login import current_user, login_required
 import requests
+from sqlalchemy import select
 
 from ..schemas import TaskForm
 from .. import app, API_URL
-
+from ..db import Session, Task
 
 @app.get('/tasks')
 @login_required
@@ -34,3 +35,9 @@ def task():
             return render_template('create_task.html', form=form)
 
     return render_template('create_task.html', form=form)
+
+
+@app.post('/tasks/change_status')
+@login_required
+def change_status_task():
+    pass

@@ -11,11 +11,11 @@
 <div class="filter-container">
     <button class="filter-btn" id="filterBtn">Фильтры</button>
     <div class="filter-dropdown" id="filterDropdown">
-        <a href="?status=not_started" class="filter-item">Не начатые</a>
-        <a href="?status=in_progress" class="filter-item">В работе</a>
-        <a href="?status=in_review" class="filter-item">На проверке</a>
-        <a href="?status=done" class="filter-item">Завершённые</a>
-    </div>
+    <a href="{{ url_for('main') }}?status=not_started" class="filter-item">Не начатые</a>
+    <a href="{{ url_for('main') }}?status=in_progress" class="filter-item">В работе</a>
+    <a href="{{ url_for('main') }}?status=in_review" class="filter-item">На проверке</a>
+    <a href="{{ url_for('main') }}?status=done" class="filter-item">Завершённые</a>
+</div>
 </div>
 
 <div class="task-columns">
