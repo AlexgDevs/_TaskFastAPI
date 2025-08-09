@@ -31,5 +31,6 @@ def migrate():
 
 from .models import (
     User,
-    Task
+    Task,
+    Project
 )

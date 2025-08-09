@@ -15,3 +15,4 @@ class User(Base):
     role: Mapped[Literal['user', 'admin', 'moderator']] = mapped_column(default='user')
 
     tasks: Mapped[List['Task']] = relationship('Task', back_populates='user', cascade='all, delete-orphan')
+    projects: Mapped[List['Project']] = relationship('Project', back_populates='user', cascade='all, delete-orphan')

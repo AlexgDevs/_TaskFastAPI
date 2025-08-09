@@ -36,3 +36,11 @@ def main():
             sorted_tasks=sorted_tasks,
             user=user
         )
+
+
+@app.get('/tasks/lists')
+@login_required
+def tasks_lists():
+    with Session() as session:
+        user = session.scalar(select(User).where(User.id == current_user.id))
+    return render_template('list_tasks.html', current_user = current_user, user=user)

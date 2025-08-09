@@ -6,18 +6,15 @@ from sqlalchemy import String, DateTime, ForeignKey
 
 from .. import Base
 
-class Task(Base):
-    __tablename__ = 'tasks'
+class Project(Base):
+    __tablename__ = 'projects'
 
     id: Mapped[int] = mapped_column(primary_key=True)
     title: Mapped[str] = mapped_column(String(255))
     description: Mapped[str] = mapped_column(String(2048))
     created_at: Mapped[DateTime] = mapped_column(DateTime, default=datetime.now)
-    status: Mapped[Literal['not_started', 'in_progress', 'in_review', 'done', 'burned_down']] = mapped_column(default='not_started')
-    dead_line: Mapped[datetime] = mapped_column(DateTime, nullable=False)
 
     user_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
-    user: Mapped['User'] = relationship('User', back_populates='tasks', uselist=False)
+    user: Mapped['User'] = relationship('User', back_populates='projects', uselist=False)
 
-    project_id: Mapped[int] = mapped_column(ForeignKey('projects.id'))
-    project: Mapped['Project'] = relationship('Project', back_populates='tasks', uselist=False)
+    tasks: Mapped[List['Task']] = relationship('Task', back_populates='project')
