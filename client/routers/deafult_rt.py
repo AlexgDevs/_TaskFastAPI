@@ -2,10 +2,12 @@ from collections import defaultdict
 from flask import render_template, request
 from flask_login import login_required, current_user
 from sqlalchemy import select
+from sqlalchemy.orm import joinedload
 import requests
 
 from .. import app, API_URL
-from ..db import Session, Task, User
+from ..db import Session, Task, User, Project
+
 
 @app.get('/')
 @login_required
@@ -15,7 +17,8 @@ def main():
 
     with Session() as session:
         user = session.scalar(select(User).where(User.id == current_user.id))
-        response = requests.get(f'{API_URL}/tasks/{user.id}', params={'status': status})
+        response = requests.get(
+            f'{API_URL}/tasks/{user.id}', params={'status': status})
 
         tasks = response.json()
 
@@ -29,7 +32,6 @@ def main():
 
         for task in tasks:
             sorted_tasks[task['status']].append(task)
-        
 
         return render_template(
             'main.html',
@@ -43,4 +45,7 @@ def main():
 def tasks_lists():
     with Session() as session:
         user = session.scalar(select(User).where(User.id == current_user.id))
-    return render_template('list_tasks.html', current_user = current_user, user=user)
+        response = requests.get(f'{API_URL}/projects/{current_user.id}')
+        projects =  response.json()
+
+    return render_template('list_tasks.html', current_user=current_user, user=user, projects=projects)

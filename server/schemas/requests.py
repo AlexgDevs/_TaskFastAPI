@@ -38,3 +38,9 @@ class UserPatchUpdate(BaseModel): # Частичное обновление по
     name: str | None = None
     role: str | None = None
     password: str | None = None
+
+
+class ProjectCreate(BaseModel):
+    title: str
+    description: str 
+    user_id: int
