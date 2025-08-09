@@ -8,6 +8,7 @@ class TaskCreate(BaseModel): # Создание таска
     description: str
     dead_line: str
     user_id: int
+    project_id: int
 
     @field_validator('dead_line')
     def validate_dead_line(cls, dead_line: str) -> datetime:

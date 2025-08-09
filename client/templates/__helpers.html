@@ -1,6 +1,7 @@
-{% macro form_generate(form, action='') %}
+{% macro form_generate(form, action='', project_id=None) %}
 <form action="{{ action }}" method="post">
     {{ form.hidden_tag() }}
+    <input type="hidden" name="project_id" value="{{ project_id }}">
     {% for field in form if field.widget.input_type != 'hidden' %}
         {% if field.widget.input_type != "submit" %}
         <div class="field">

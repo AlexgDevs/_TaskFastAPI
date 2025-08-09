@@ -7,12 +7,12 @@ from ..schemas import TaskForm
 from .. import app, API_URL
 from ..db import Session, Task
 
-
 @app.get('/tasks')
 @login_required
 def task_page():
     form = TaskForm()
-    return render_template('create_task.html', form=form)
+    project_id = request.args.get('project_id')
+    return render_template('create_task.html', form=form, project_id_rd=project_id)
 
 
 @app.post('/tasks')
@@ -26,6 +26,7 @@ def task():
             'description': form.description.data,
             'dead_line': form.dead_line.data.strftime('%Y.%m.%d'),
             'user_id': current_user.id,
+            'project_id': request.form.get('project_id')
         }
 
         response = requests.post(f'{API_URL}/tasks', json=data)

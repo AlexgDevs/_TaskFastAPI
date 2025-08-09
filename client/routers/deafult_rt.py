@@ -1,5 +1,5 @@
 from collections import defaultdict
-from flask import render_template, request
+from flask import flash, redirect, render_template, request, url_for
 from flask_login import login_required, current_user
 from sqlalchemy import select
 from sqlalchemy.orm import joinedload
@@ -7,6 +7,7 @@ import requests
 
 from .. import app, API_URL
 from ..db import Session, Task, User, Project
+from ..schemas import ProjectForm
 
 
 @app.get('/')
@@ -40,12 +41,43 @@ def main():
         )
 
 
-@app.get('/tasks/lists')
+@app.get('/projects/list')
 @login_required
-def tasks_lists():
+def projects_list():
     with Session() as session:
         user = session.scalar(select(User).where(User.id == current_user.id))
         response = requests.get(f'{API_URL}/projects/{current_user.id}')
         projects =  response.json()
 
-    return render_template('list_tasks.html', current_user=current_user, user=user, projects=projects)
+    return render_template('projects_coulmns.html', current_user=current_user, user=user, projects=projects)
+
+# перенесу в файл projects_rt
+
+@app.get('/projects')
+@login_required
+def projects_page():
+    form = ProjectForm()
+    return render_template('create_project.html', form=form)
+
+
+@app.post('/projects')
+@login_required
+def add_project():
+    form = ProjectForm()
+    if form.validate_on_submit():
+        data = {
+            'title': form.title.data,
+            'description': form.description.data,
+            'user_id': current_user.id,
+        }
+
+        response = requests.post(f'{API_URL}/projects', json=data)
+        if response.status_code == 201:
+            flash('Проект успешно создан', 'info')
+            return redirect(url_for('projects_list'))
+        
+        else:
+            flash('Не удалось создать проект', 'error')
+            return render_template('create_project.html', form=form)
+    
+    return render_template('create_project.html', form=form)

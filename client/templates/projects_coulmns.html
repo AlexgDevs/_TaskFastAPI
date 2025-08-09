@@ -1,0 +1,54 @@
+{% extends '__base.html' %}
+
+{% block nav %}
+{{ super() }}
+<ul class="nav-items">
+    <li><a href="{{ url_for('main') }}">Мой прогресс</a></li>
+</ul>
+{% endblock %}
+
+<!-- будет типа колонок  -->
+{% block content %}
+<div class="projects-content">
+    <div class="porjects-coulmns">
+        {% if projects %}
+        {% for project in projects %}
+        <div class="project-coulmn">
+            Название: {{ project.get('title') }}
+            <hr>
+            <div class="project-tasks">
+                {% if project.get('tasks') %}
+                {% for task in project.get('tasks') %}
+                <div class="project_task-content">
+                    <div class="task__content-title">
+                        {{ task.get('title') }}
+                        <span> {{ task.get('created_at') }} </span>
+                    </div>
+                    <div class="task-modal">
+                        <div class="task-modal-close">&items</div> <!-- krestik -->
+                        <div class="task-modal-settings">&items</div> <!-- three poinst -->
+                        <div class="task-modal__content">
+                            Задача: {{ task.get('description') }}
+                            <hr>
+                            <strong>Дедлайн:</strong>{{ task.get('dead_line') }}
+                        </div>
+                    </div>
+                    {% endfor %}
+                    <span><a href="{{ url_for('task_page')}}?project_id={{ project.get('id')}}">+ создать
+                            таск</a></span>
+                </div>
+                {% else %}
+                <span><a href="{{ url_for('task_page')}}?project_id={{ project.get('id')}}">+ создать таск</a></span>
+                <p>айди проекта аааааааааааааа : {{ project.get('id') }}</p>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <span><a href="{{ url_for('projects_page') }}">+ создать первый проект</a></span>
+        {% endif %}
+    </div>
+    <span><a href="{{ url_for('projects_page') }}">+ создать проект</a></span>
+</div>
+
+{% endblock %}
