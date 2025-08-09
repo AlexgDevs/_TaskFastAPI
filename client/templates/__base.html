@@ -26,9 +26,8 @@
             LOGO
         </h1>
         <ul class="nav-items">
-            <li class="nav__item"><a href="{{ url_for('task_page') }}">Создать задачу</a></li>
-            <li class="nav__item"><a href="#">Создать новый тэг</a></li>
-            <li class="nav__item"><a href="#">Тэги</a></li>
+            <li><a href="{{ url_for('task_page') }}">Создать задачу</a></li>
+            <li class="nav__item"><a href="#">Мои проекты</a></li>
             {% if user.role == 'admin' %}
             <li class="nav__item"><a href="#">Список пользователей</a></li>
             <li class="nav__item"><a href="#">Назначить админом</a></li>

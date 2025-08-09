@@ -1,3 +1,28 @@
+{% macro form_generate(form, action='') %}
+<form action="{{ action }}" method="post">
+    {{ form.hidden_tag() }}
+    {% for field in form if field.widget.input_type != 'hidden' %}
+        {% if field.widget.input_type != "submit" %}
+        <div class="field">
+            {{ field.label }} {{ field }}
+        </div> 
+        {% else %}
+        <div class="field">
+            {{ field }}
+        </div> 
+        {% endif %}
+        {% if field.errors %}
+            {% for error in field.errors %}
+                <div class="field_error">
+                    <strong>{{ error }}</strong>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endfor %}
+</form>
+{% endmacro %}
+
+
 {% macro task_generate(tasks, status='') %}
 <div class="{{ status }}-column column">
     <div class="column-header">
@@ -5,6 +30,7 @@
         {% elif status == 'in_progress' %} В работе
         {% elif status == 'in_review' %} На проверке
         {% elif status == 'done' %} Завершённые
+        {% elif status == 'burned_down' %} Сгоревшие 
         {% endif %}
     </div>
     {% if tasks %}
@@ -13,11 +39,11 @@
         {{ task.get('title') }}
     </div>
 
-    <!-- Основное модальное окно -->
     <div class="modal-overlay" id="modal-{{ task.id }}">
         <div class="task-card-modal">
             <span class="modal-close">&times;</span>
             <div class="modal-content">
+                <span>Описание</span>
                 {{ task.get('description') }}
                 <hr>
                 <span class="modal-date">{{ task.get('created_at') }}</span>
@@ -63,9 +89,18 @@
                 <form action="/tasks/change_status" method="post">
                     <input type="hidden" name="status" value="not_started">
                     <input type="hidden" name="task_id" value="{{ task.get('id') }}">
-                    <button type="submit" class="status-option not-started">Не начато</button>
+                    <button type="submit" class="status-option not_started">Не начато</button>
                 </form>
                 {% endif %}
+
+                {% if task.get('status') != 'burned_down' %}
+                <form action="/tasks/change_status" method="post">
+                    <input type="hidden" name="status" value="burned_down">
+                    <input type="hidden" name="task_id" value="{{ task.get('id') }}">
+                    <button type="submit" class="status-option burned_down">Время вышло</button>
+                </form>
+                {% endif %}
+
             </div>
         </div>
     </div>

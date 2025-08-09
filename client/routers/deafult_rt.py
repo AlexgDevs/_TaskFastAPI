@@ -23,6 +23,7 @@ def main():
             'not_started': [],
             'in_progress': [],
             'in_review': [],
+            'burned_down': [],
             'done': []
         }
 

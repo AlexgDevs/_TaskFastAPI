@@ -40,6 +40,7 @@ def task():
     return render_template('create_task.html', form=form)
 
 
+# ЗАВТРА НА ФАСТАПИ ПЕРЕПИШУ!!!!
 @app.post('/tasks/change_status')
 @login_required
 def change_status():
