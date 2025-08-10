@@ -41,7 +41,7 @@ class UserPatchUpdate(BaseModel): # Частичное обновление по
     password: str | None = None
 
 
-class ProjectCreate(BaseModel):
+class ProjectCreate(BaseModel): # создание проекта
     title: str
     description: str 
     user_id: int

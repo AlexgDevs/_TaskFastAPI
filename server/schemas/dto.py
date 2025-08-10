@@ -24,7 +24,7 @@ class TaskResponse(BaseModel): # вывод задачи
         from_attributes = True
 
 
-class ProjectResponse(BaseModel):
+class ProjectResponse(BaseModel): # вывод проекта
     id: int
     title: str
     description: str 

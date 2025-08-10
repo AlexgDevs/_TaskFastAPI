@@ -48,7 +48,7 @@ def register():
                 role=new_user.role))
 
             flash('Вы успешно авторизовались', 'info')
-            return redirect(url_for('main'))
+            return redirect(url_for('show_status_dashboard'))
 
     else:
         return render_template('register.html', form=form)
@@ -65,7 +65,7 @@ def login():
                 if check_password_hash(user.password, form.password.data):
                     login_user(LoginUser(id=user.id, name=user.name, role=user.role))
                     flash('Вы успешно вошли в аккаунт!', 'info')
-                    return redirect(url_for('main'))
+                    return redirect(url_for('show_status_dashboard'))
                 else:
                     flash('Неверный логин или пароль', 'error')
                     return render_template('login.html', form=form)
@@ -93,7 +93,7 @@ def logout_accept():
 @app.get('/auth/logout/cancel')
 @login_required
 def logout_cancel():
-    return redirect(url_for('main'))
+    return redirect(url_for('show_status_dashboard'))
 
 
 @app.get('/auth/profile/change-page')

@@ -1,0 +1,398 @@
+    /* Цветовая схема */
+
+
+    :root {
+        --primary: #4361ee;       /* Основной синий */
+        --primary-light: #e6e9ff; /* Светло-синий */
+        --primary-dark: #3a56d4;  /* Темно-синий */
+        --text: #2b2d42;         /* Основной текст */
+        --text-light: #6c757d;    /* Второстепенный текст */
+        --bg: #ffffff;           /* Фон */
+        --card-bg: #f8f9fa;      /* Фон карточек */
+        --border: #e9ecef;       /* Границы */
+        --shadow: 0 4px 20px rgba(0,0,0,0.08); /* Тени */
+        
+        /* Цвета статусов */
+        --not-started: #adb5bd;
+        --in-progress: #4361ee;
+        --in-review: #ffb700;
+        --done: #00a76f;
+        --burned-down: #f94144;
+    }
+
+    body {
+        background-color: var(--bg);
+        color: var(--text);
+        font-family: 'Inter', -apple-system, sans-serif;
+        margin: 0;
+        min-height: 100vh;
+    }
+
+    /* Навигация */
+    .nav-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 2rem;
+        background-color: white;
+        box-shadow: var(--shadow);
+        height: 70px;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+    }
+
+    .logo {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin: 0;
+    }
+
+    .nav-items {
+        display: flex;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        gap: 1.5rem;
+        align-items: center;
+    }
+
+    .nav__item a {
+        color: var(--text-light);
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.2s;
+        font-size: 0.95rem;
+        padding: 0.5rem 0;
+        position: relative;
+    }
+
+    .nav__item a:hover {
+        color: var(--primary);
+    }
+
+    .nav__item a::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: var(--primary);
+        transition: width 0.3s;
+    }
+
+    .nav__item a:hover::after {
+        width: 100%;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+    /* Общие стили */
+    .user-about {
+        display: flex;
+        gap: 1.5rem;
+        padding: 1rem 2rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        border-bottom: 1px solid var(--border);
+    }
+
+    /* Фильтры */
+    .filter-container {
+        position: relative;
+        padding: 1rem 2rem;
+    }
+
+    .filter-btn {
+        background: var(--primary);
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: background 0.2s;
+    }
+
+    .filter-btn:hover {
+        background: var(--primary-dark);
+    }
+
+    .filter-dropdown {
+        position: absolute;
+        top: 100%;
+        left: 2rem;
+        background: white;
+        border-radius: 8px;
+        box-shadow: var(--shadow);
+        padding: 0.5rem 0;
+        z-index: 10;
+        display: none;
+        min-width: 180px;
+    }
+
+    .filter-dropdown.show {
+        display: block;
+    }
+
+    .filter-item {
+        display: block;
+        padding: 0.5rem 1rem;
+        color: var(--text);
+        text-decoration: none;
+        transition: background 0.2s;
+    }
+
+    .filter-item:hover {
+        background: var(--primary-light);
+        color: var(--primary);
+    }
+
+    /* Колонки задач */
+    .task-columns {
+        display: flex;
+        gap: 1.5rem;
+        padding: 0 2rem 2rem;
+        overflow-x: auto;
+        height: calc(100vh - 180px);
+        align-items: flex-start;
+    }
+
+    .column {
+        width: 280px;
+        min-width: 280px;
+        background: var(--card-bg);
+        border-radius: 12px;
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .column-header {
+        font-weight: 600;
+        padding: 0.5rem;
+        color: var(--text);
+        text-align: center;
+        position: relative;
+    }
+
+    /* Карточки задач */
+    .task-card {
+        background: white;
+        padding: 1rem;
+        border-radius: 8px;
+        box-shadow: var(--shadow);
+        cursor: pointer;
+        transition: transform 0.2s;
+        position: relative;
+    }
+
+    /* Цвета левой границы по статусам */
+    .not_started-column .task-card {
+        border-left: 3px solid var(--not-started);
+    }
+    .in_progress-column .task-card {
+        border-left: 3px solid var(--in-progress);
+    }
+    .in_review-column .task-card {
+        border-left: 3px solid var(--in-review);
+    }
+    .done-column .task-card {
+        border-left: 3px solid var(--done);
+    }
+    .burned_down-column .task-card {
+        border-left: 3px solid var(--burned-down);
+    }
+
+    .task-card:hover {
+        transform: translateY(-3px);
+    }
+
+    .disabeld-text {
+        color: var(--text-light);
+        text-align: center;
+        padding: 1rem;
+        font-style: italic;
+    }
+
+    /* Модальные окна */
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.5);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        backdrop-filter: blur(5px);
+    }
+
+    .task-card-modal, .status-modal {
+        background: white;
+        border-radius: 12px;
+        width: 500px;
+        max-width: 90%;
+        max-height: 90vh;
+        overflow: auto;
+        box-shadow: var(--shadow);
+        position: relative;
+        padding: 2rem;
+    }
+
+    .modal-close, .status-modal-close {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: var(--text-light);
+        transition: color 0.2s;
+        background: none;
+        border: none;
+        line-height: 1;
+    }
+
+    .modal-close:hover, .status-modal-close:hover {
+        color: var(--primary);
+    }
+
+    .modal-content {
+        margin-bottom: 1.5rem;
+    }
+
+    .modal-content span {
+        display: block;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+        color: var(--primary);
+    }
+
+    .modal-date {
+        color: var(--text-light);
+        font-size: 0.8rem;
+        margin-top: 1rem;
+        display: block;
+    }
+
+    hr {
+        border: none;
+        border-top: 1px solid var(--border);
+        margin: 1rem 0;
+    }
+
+    .modal-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1.5rem;
+    }
+
+    .modal-btn {
+        padding: 0.75rem 1.5rem;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: all 0.2s;
+        border: 1px solid var(--border);
+        background: white;
+        flex: 1;
+    }
+
+    .modal-btn-open-status {
+        background: var(--primary);
+        color: white;
+        border-color: var(--primary);
+    }
+
+    .modal-btn-open-status:hover {
+        background: var(--primary-dark);
+        border-color: var(--primary-dark);
+    }
+
+    /* Окно смены статуса */
+    .status-options {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        margin-top: 1.5rem;
+    }
+
+    .status-option {
+        padding: 0.75rem 1rem;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: all 0.2s;
+        border: none;
+        text-align: center;
+    }
+
+    /* Стили для кнопок статусов */
+    .status-option[value="not_started"],
+    .not_started {
+        background: #f8f9fa;
+        color: var(--not-started);
+    }
+
+    .status-option[value="in_progress"],
+    .in-progress {
+        background: var(--primary-light);
+        color: var(--in-progress);
+    }
+
+    .status-option[value="in_review"],
+    .in-review {
+        background: #fff8e6;
+        color: var(--in-review);
+    }
+
+    .status-option[value="done"],
+    .done {
+        background: #e6f7f0;
+        color: var(--done);
+    }
+
+    .status-option[value="burned_down"],
+    .burned_down {
+        background: #ffebee;
+        color: var(--burned-down);
+    }
+
+    /* Анимации */
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    @keyframes slideIn {
+        from { transform: translateY(20px); }
+        to { transform: translateY(0); }
+    }
+
+    .modal-overlay.show {
+        display: flex;
+        animation: fadeIn 0.3s ease;
+    }
+
+    .task-card-modal.show,
+    .status-modal.show {
+        animation: slideIn 0.3s ease;
+    }
+    .modal-overlay,
+    .status-modal-overlay {
+        display: none;
+    }

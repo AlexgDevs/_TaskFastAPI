@@ -9,6 +9,7 @@ from ..db import Project, Task, User, Session
 project_app = APIRouter(prefix='/projects', tags=['Projects'])
 
 
+# получение всех проектов
 @project_app.get('/', response_model=List[ProjectResponse])
 def projects():
     with Session() as session:
@@ -16,6 +17,7 @@ def projects():
         return [ProjectResponse.model_validate(project) for project in projects]
 
 
+# получениче всех проектов конкретного пользователя
 @project_app.get('/{user_id}', response_model=List[ProjectResponse])
 def projects_by_user(user_id: int):
     with Session() as session:
@@ -26,6 +28,7 @@ def projects_by_user(user_id: int):
         return [ProjectResponse.model_validate(project) for project in projects]
 
 
+# создание проекта
 @project_app.post('/', status_code=status.HTTP_201_CREATED)
 def add_project(project_data: ProjectCreate):
     with Session.begin() as session:

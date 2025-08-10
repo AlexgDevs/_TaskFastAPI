@@ -1,0 +1,343 @@
+    /* Цветовая схема */
+    :root {
+        --primary: #4361ee;       /* Основной синий */
+        --primary-light: #e6e9ff; /* Светло-синий */
+        --primary-dark: #3a56d4;  /* Темно-синий */
+        --text: #2b2d42;         /* Основной текст */
+        --text-light: #6c757d;    /* Второстепенный текст */
+        --bg: #ffffff;           /* Фон */
+        --card-bg: #f8f9fa;      /* Фон карточек */
+        --border: #e9ecef;       /* Границы */
+        --shadow: 0 4px 20px rgba(0,0,0,0.08); /* Тени */
+    }
+
+    /* Базовые стили */
+    body {
+        background-color: var(--bg);
+        color: var(--text);
+        font-family: 'Inter', -apple-system, sans-serif;
+        margin: 0;
+        min-height: 100vh;
+    }
+
+    /* Навигация */
+    .nav-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 2rem;
+        background-color: white;
+        box-shadow: var(--shadow);
+        height: 70px;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+    }
+
+    .logo {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin: 0;
+    }
+
+    .nav-items {
+        display: flex;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        gap: 1.5rem;
+        align-items: center;
+    }
+
+    .nav__item a {
+        color: var(--text-light);
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.2s;
+        font-size: 0.95rem;
+        padding: 0.5rem 0;
+        position: relative;
+    }
+
+    .nav__item a:hover {
+        color: var(--primary);
+    }
+
+    .nav__item a::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: var(--primary);
+        transition: width 0.3s;
+    }
+
+    .nav__item a:hover::after {
+        width: 100%;
+    }
+
+    /* Основной контент */
+    .projects-content {
+        padding: 2rem;
+        min-height: calc(100vh - 70px);
+    }
+
+    /* Доска проектов */
+    .porjects-coulmns {
+        display: flex;
+        gap: 1.5rem;
+        overflow-x: auto;
+        padding-bottom: 1rem;
+        align-items: flex-start;
+    }
+
+    /* Колонка проекта */
+    .project-coulmn {
+        width: 300px;
+        min-width: 300px;
+        background: var(--card-bg);
+        border-radius: 12px;
+        padding: 1.25rem;
+        display: flex;
+        flex-direction: column;
+        max-height: calc(100vh - 180px);
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow);
+    }
+
+    .project-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.25rem;
+        position: relative;
+    }
+
+    .project-title {
+        font-weight: 600;
+        margin: 0;
+        font-size: 1.1rem;
+        color: var(--text);
+    }
+
+    .project-settings {
+        color: var(--text-light);
+        cursor: pointer;
+        padding: 0.5rem;
+        border-radius: 6px;
+        transition: all 0.2s;
+        font-size: 1.1rem;
+        line-height: 1;
+    }
+
+    .project-settings:hover {
+        background: rgba(0,0,0,0.05);
+        color: var(--primary);
+    }
+
+    /* Список задач */
+    .project-tasks {
+        flex-grow: 1;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    /* Карточка задачи */
+    .project_task-content {
+        background: white;
+        padding: 1rem;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+        box-shadow: var(--shadow);
+        border-left: 3px solid var(--primary);
+        position: relative;
+    }
+
+    .project_task-content:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+    }
+
+    .task__content-title {
+        font-size: 0.95rem;
+        margin: 0 0 0.5rem 0;
+        font-weight: 500;
+    }
+
+    .task__content-title span {
+        font-size: 0.8rem;
+        color: var(--text-light);
+        display: block;
+    }
+
+    /* Кнопки добавления */
+    .add-btn {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--primary);
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-size: 0.95rem;
+        text-decoration: none;
+        background: var(--primary-light);
+        border: none;
+        font-weight: 500;
+    }
+
+    .add-btn:hover {
+        background: var(--primary);
+        color: white;
+    }
+
+    /* Модальные окна */
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.5);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        backdrop-filter: blur(5px);
+        animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    .modal-content {
+        background: white;
+        border-radius: 16px;
+        width: 500px;
+        max-width: 90%;
+        max-height: 90vh;
+        overflow: hidden;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        transform: translateY(20px);
+        animation: modalOpen 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    @keyframes modalOpen {
+        to { transform: translateY(0); }
+    }
+
+    .modal-header {
+        padding: 1.5rem;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: var(--primary);
+        color: white;
+    }
+
+    .modal-title {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 600;
+    }
+
+    .close-modal {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1.5rem;
+        cursor: pointer;
+        padding: 0.25rem;
+        opacity: 0.8;
+        transition: opacity 0.2s;
+    }
+
+    .close-modal:hover {
+        opacity: 1;
+    }
+
+    .modal-body {
+        padding: 1.5rem;
+    }
+
+    /* Настройки в модальном окне */
+    .settings-menu {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .setting-item {
+        padding: 0.75rem 1rem;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-weight: 500;
+        color: var(--text-light);
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .setting-item:hover {
+        background: var(--primary-light);
+        color: var(--primary);
+    }
+
+    /* Скроллбар */
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #c1c1c1;
+        border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--primary);
+    }
+
+    /* Адаптивность */
+    @media (max-width: 768px) {
+        .nav-container {
+            padding: 0 1rem;
+            flex-direction: column;
+            height: auto;
+            padding: 1rem;
+        }
+        
+        .nav-items {
+            width: 100%;
+            justify-content: space-between;
+            margin-top: 1rem;
+        }
+        
+        .projects-content {
+            padding: 1.5rem 1rem;
+        }
+        
+        .project-coulmn {
+            min-width: 260px;
+        }
+    }
+
+
+/* тут статус деборд  */
+

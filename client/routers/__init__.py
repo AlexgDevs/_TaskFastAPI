@@ -1,1 +1,1 @@
-from . import auth_rt, deafult_rt, tasks_rt
+from . import auth_rt, deafult_rt, tasks_rt, projects_rt

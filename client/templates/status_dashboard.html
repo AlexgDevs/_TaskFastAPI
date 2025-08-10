@@ -1,0 +1,101 @@
+{% extends '__base.html' %}
+{% from '__helpers.html' import task_generate %}
+
+
+{% block styles %}
+<link rel="stylesheet" href="static/styles/status_dashboard.css">
+{% endblock %}
+
+{% block content %}
+<div class="user-about">
+    <span>Присоединился: {{ user.joined.strftime('%d.%m.%Y') }}</span>
+    <span>Выполнено задач: 0</span>
+</div>
+
+<div class="filter-container">
+    <button class="filter-btn" id="filterBtn">Фильтры</button>
+    <div class="filter-dropdown" id="filterDropdown">
+        <a href="{{ url_for('show_status_dashboard') }}?status=not_started" class="filter-item">Не начатые</a>
+        <a href="{{ url_for('show_status_dashboard') }}?status=in_progress" class="filter-item">В работе</a>
+        <a href="{{ url_for('show_status_dashboard') }}?status=in_review" class="filter-item">На проверке</a>
+        <a href="{{ url_for('show_status_dashboard') }}?status=done" class="filter-item">Завершённые</a>
+        <a href="{{ url_for('show_status_dashboard') }}?status=burned_down" class="filter-item">Сгоревшие</a>
+    </div>
+</div>
+
+<div class="task-columns">
+    {{ task_generate(sorted_tasks.get('not_started'), 'not_started') }}
+    {{ task_generate(sorted_tasks.get('in_progress'), 'in_progress') }}
+    {{ task_generate(sorted_tasks.get('in_review'), 'in_review') }}
+    {{ task_generate(sorted_tasks.get('done'), 'done') }}
+    {{ task_generate(sorted_tasks.get('burned_down'), 'burned_down') }}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    // Фильтры
+    document.getElementById('filterBtn').addEventListener('click', function() {
+        document.getElementById('filterDropdown').classList.toggle('show');
+    });
+
+    // Закрытие фильтров при клике вне
+    window.addEventListener('click', function(e) {
+        if (!e.target.matches('#filterBtn') && !e.target.closest('.filter-dropdown')) {
+            document.getElementById('filterDropdown').classList.remove('show');
+        }
+    });
+
+    // Открытие модального окна задачи
+    document.querySelectorAll('.task-card').forEach(card => {
+        card.addEventListener('click', function() {
+            const taskId = this.nextElementSibling.id.split('-')[1];
+            const modal = document.getElementById(`modal-${taskId}`);
+            modal.classList.add('show');
+            modal.style.display = 'flex';
+        });
+    });
+
+    // Закрытие модальных окон
+    document.querySelectorAll('.modal-close, .status-modal-close').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const modal = this.closest('.modal-overlay');
+            modal.classList.remove('show');
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 300);
+        });
+    });
+
+    // Открытие модального окна смены статуса
+    document.querySelectorAll('.modal-btn-open-status').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const taskId = this.dataset.taskId;
+            const taskModal = document.getElementById(`modal-${taskId}`);
+            const statusModal = document.getElementById(`status-modal-${taskId}`);
+            
+            taskModal.classList.remove('show');
+            setTimeout(() => {
+                taskModal.style.display = 'none';
+                statusModal.classList.add('show');
+                statusModal.style.display = 'flex';
+            }, 300);
+        });
+    });
+
+    // Закрытие при клике вне модального окна
+    document.querySelectorAll('.modal-overlay').forEach(modal => {
+        modal.addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.classList.remove('show');
+                setTimeout(() => {
+                    this.style.display = 'none';
+                }, 300);
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,123 @@
+{% extends '__base.html' %}
+
+{% block content %}
+<div class="projects-content">
+    <div class="porjects-coulmns">
+        {% if projects %}
+        {% for project in projects %}
+        <div class="project-coulmn">
+            <div class="project-header">
+                <h3 class="project-title">{{ project.get('title') }}</h3>
+                <div class="project-settings">⋮</div>
+            </div>
+            
+            <div class="project-tasks">
+                {% for task in project.get('tasks', []) %}
+                <div class="project_task-content" onclick="openTaskModal(this)">
+                    <div class="task__content-title">
+                        {{ task.get('title') }}
+                        <span>{{ task.get('created_at') }}</span>
+                    </div>
+                    
+                    <!-- Модальное окно задачи (скрыто) -->
+                    <div class="task-modal-content" style="display: none;">
+                        <h4>{{ task.get('title') }}</h4>
+                        <p>{{ task.get('description') }}</p>
+                        <p><strong>Дедлайн:</strong> {{ task.get('dead_line') }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+                
+                <a href="{{ url_for('create_task_page')}}?project_id={{ project.get('id')}}" class="add-btn">
+                    <span>+</span> Добавить задачу
+                </a>
+            </div>
+            
+            <!-- Модальное окно настроек проекта -->
+            <div class="modal-overlay project-settings-modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Настройки проекта</h3>
+                        <button class="close-modal" onclick="closeModal(this)">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <ul class="settings-menu">
+                            <li class="setting-item">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M3 6h18"></path>
+                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                </svg>
+                                Удалить проект
+                            </li>
+                            <li class="setting-item">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                </svg>
+                                Переименовать
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        
+        <a href="{{ url_for('create_project_page') }}" class="add-btn" style="min-width: 300px; justify-content: center; border: 2px dashed var(--border); background: transparent;">
+            <span>+</span> Создать новый проект
+        </a>
+        {% else %}
+        <div style="text-align: center; width: 100%; padding: 2rem;">
+            <p style="color: var(--text-light); margin-bottom: 1rem;">У вас пока нет проектов</p>
+            <a href="{{ url_for('create_project_page') }}" class="add-btn" style="padding: 0.75rem 1.5rem; background: var(--primary); color: white; border-radius: 6px; text-decoration: none;">
+                Создать первый проект
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Главное модальное окно для задач (используется для всех задач) -->
+<div id="taskModal" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title" id="modalTaskTitle">Задача</h3>
+            <button class="close-modal" onclick="closeModal(this)">×</button>
+        </div>
+        <div class="modal-body" id="modalTaskContent">
+            <!-- Содержимое будет заполнено JavaScript -->
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function openTaskModal(taskElement) {
+    const modalContent = taskElement.querySelector('.task-modal-content').innerHTML;
+    document.getElementById('modalTaskTitle').textContent = taskElement.querySelector('.task__content-title h4')?.textContent || 'Задача';
+    document.getElementById('modalTaskContent').innerHTML = modalContent;
+    document.getElementById('taskModal').style.display = 'flex';
+}
+
+document.querySelectorAll('.project-settings').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const modal = this.closest('.project-coulmn').querySelector('.project-settings-modal');
+        modal.style.display = 'flex';
+    });
+});
+
+function closeModal(btn) {
+    btn.closest('.modal-overlay').style.display = 'none';
+}
+
+document.querySelectorAll('.modal-overlay').forEach(modal => {
+    modal.addEventListener('click', function(e) {
+        if (e.target === this) {
+            this.style.display = 'none';
+        }
+    });
+});
+</script>
+{% endblock %}

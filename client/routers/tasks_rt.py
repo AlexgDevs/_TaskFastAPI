@@ -7,17 +7,19 @@ from ..schemas import TaskForm
 from .. import app, API_URL
 from ..db import Session, Task
 
-@app.get('/tasks')
+@app.get('/tasks/create/page')
 @login_required
-def task_page():
+def create_task_page():
+    '''Страница для создания задачи'''
     form = TaskForm()
     project_id = request.args.get('project_id')
     return render_template('create_task.html', form=form, project_id_rd=project_id)
 
 
-@app.post('/tasks')
+@app.post('/tasks/create')
 @login_required
-def task():
+def create_task():
+    '''Обработка страницы создания задачи'''
     form = TaskForm()
     if form.validate_on_submit():
 
@@ -32,7 +34,7 @@ def task():
         response = requests.post(f'{API_URL}/tasks', json=data)
         if response.status_code == 201:
             flash('Вы успешно создали задачу!', 'info')
-            return redirect(url_for('main'))
+            return redirect(url_for('show_projects'))
         
         else:
             flash('Не удалось создать заметку. Попробуйте еще раз', 'error')
@@ -45,6 +47,7 @@ def task():
 @app.post('/tasks/change_status')
 @login_required
 def change_status():
+    '''Изменение статуса задачи'''
     status = request.form.get('status')
     task_id = request.form.get('task_id')
 
@@ -53,6 +56,6 @@ def change_status():
         if task:
             task.status = status
             flash('Статус обновлен', 'info')
-            return redirect(url_for('main'))
+            return redirect(url_for('show_status_dashboard'))
 
-        return redirect(url_for('main'))
+        return redirect(url_for('show_status_dashboard'))
