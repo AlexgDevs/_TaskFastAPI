@@ -52,7 +52,10 @@
             <div class="modal-actions">
                 <button type="button" class="modal-btn modal-btn-open-status" data-task-id="{{ task.id }}">Сменить
                     статус</button>
-                <button type="button" class="modal-btn">Изменить другое</button>
+                <form action="/tasks/change/other_page" method="post">
+                    <input type="hidden" name="task_id" value="{{ task.get('id') }}">
+                    <button type="submit" class="modal-btn">Изменить другое</button>
+                </form>
             </div>
         </div>
     </div>

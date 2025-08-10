@@ -3,7 +3,7 @@ from flask_login import current_user, login_required
 import requests
 from sqlalchemy import select
 
-from ..schemas import TaskForm
+from ..schemas import TaskForm, TaskPatchForm
 from .. import app, API_URL
 from ..db import Session, Task
 
@@ -61,3 +61,25 @@ def change_status():
 
     flash('Статус обновлен', 'info')
     return redirect(url_for('show_status_dashboard'))
+
+
+@app.post('/tasks/change/other_page')
+@login_required
+def task_change_other_page():
+    form = TaskPatchForm()
+    return render_template('change_task_other.html', form=form, project_id=request.form.get('task_id'))
+
+
+@app.post('/tasks/change/other')
+def task_change_other():
+    form = TaskPatchForm()
+    if form.validate_on_submit():
+        task_id = request.form.get('project_id')
+
+        data = {
+            'title': form.title.data,
+            'description': form.description.data,
+        }
+
+        response = requests.patch(f'{API_URL}/tasks/{task_id}/{current_user.id}', json=data)
+        return redirect(url_for('show_status_dashboard'))
