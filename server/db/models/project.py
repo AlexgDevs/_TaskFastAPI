@@ -17,4 +17,4 @@ class Project(Base):
     user_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
     user: Mapped['User'] = relationship('User', back_populates='projects', uselist=False)
 
-    tasks: Mapped[List['Task']] = relationship('Task', back_populates='project')
+    tasks: Mapped[List['Task']] = relationship('Task', back_populates='project', cascade='all, delete-orphan')

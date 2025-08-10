@@ -1,9 +1,9 @@
 from typing import List
-from fastapi import APIRouter, status
+from fastapi import APIRouter, status, HTTPException
 from sqlalchemy import select
 from sqlalchemy.orm import joinedload
 
-from ..schemas import ProjectResponse, TaskResponse, ProjectCreate
+from ..schemas import ProjectResponse, TaskResponse, ProjectCreate, ProjectPatchUpdate
 from ..db import Project, Task, User, Session
 
 project_app = APIRouter(prefix='/projects', tags=['Projects'])
@@ -22,9 +22,9 @@ def projects():
 def projects_by_user(user_id: int):
     with Session() as session:
         projects = session.scalars(select(Project)
-            .where(Project.user_id == user_id)
-            .options(joinedload(Project.tasks))
-            ).unique().all()
+                                .where(Project.user_id == user_id)
+                                .options(joinedload(Project.tasks))
+                                ).unique().all()
         return [ProjectResponse.model_validate(project) for project in projects]
 
 
@@ -36,7 +36,34 @@ def add_project(project_data: ProjectCreate):
         return {'status': 'created'}
 
 
-# вот тут кароче бут таски всех один по названию удаление создание оновление | получение тасков через проект и тп
+@project_app.patch('/{user_id}/{project_id}')
+def change_project_by_user(user_id: int, project_id: int, project_data: ProjectPatchUpdate):
+    with Session.begin() as session:
+        project = session.scalar(select(Project).where(
+            Project.id == project_id, Project.user_id == user_id))
+        if project:
+            update_data = project_data.model_dump(exclude_unset=True)
+            session.merge(Project(id=project_id, **update_data))
+            return {'status': 'updated'}
+
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail='Project not found'
+            )
 
 
-# идея кароче есть страница где можно создавать проекты и в них таски таски можно редачить менять статус (потом фотки добавлять)
+@project_app.delete('/{user_id}/{project_id}')
+def delete_project_by_user(user_id: int, project_id: int):
+    with Session.begin() as session:
+        project = session.scalar(select(Project)
+                                .where(Project.id == project_id, Project.user_id == user_id))
+        if project: 
+            session.delete(project)
+            return {'status': 'deleted'}
+        
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail='Project not found'
+            )

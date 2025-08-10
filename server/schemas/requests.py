@@ -45,3 +45,8 @@ class ProjectCreate(BaseModel): # создание проекта
     title: str
     description: str 
     user_id: int
+
+
+class ProjectPatchUpdate(BaseModel):
+    title: str | None = None
+    description: str | None = None

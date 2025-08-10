@@ -37,5 +37,6 @@ def show_status_dashboard():
         return render_template(
             'status_dashboard.html',
             sorted_tasks=sorted_tasks,
-            user=user
+            user=user,
+            total_done_tasks=len(sorted_tasks.get('done'))
         )

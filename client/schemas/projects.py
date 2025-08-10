@@ -28,3 +28,15 @@ class ProjectForm(FlaskForm):
             if project:
                 raise ValidationError('Такое название проекта уже есть')
             return field.data
+
+
+class ProjectPactchForm(FlaskForm):
+    title = StringField('Название', validators=[
+        Length(max=50)
+    ])
+
+    description = StringField('Описание', validators=[
+        Length(max=512)
+    ])
+
+    submit = SubmitField('Изменить')

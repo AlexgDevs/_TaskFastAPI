@@ -9,5 +9,6 @@ from .requests import (
     TaskPatchUpdate,
     TaskPutUpdate,
     UserPatchUpdate,
-    ProjectCreate
+    ProjectCreate,
+    ProjectPatchUpdate
 )

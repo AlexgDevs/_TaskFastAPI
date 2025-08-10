@@ -7,6 +7,7 @@ from ..schemas import TaskForm
 from .. import app, API_URL
 from ..db import Session, Task
 
+
 @app.get('/tasks/create/page')
 @login_required
 def create_task_page():
@@ -35,7 +36,7 @@ def create_task():
         if response.status_code == 201:
             flash('Вы успешно создали задачу!', 'info')
             return redirect(url_for('show_projects'))
-        
+
         else:
             flash('Не удалось создать заметку. Попробуйте еще раз', 'error')
             return render_template('create_task.html', form=form)
@@ -43,7 +44,6 @@ def create_task():
     return render_template('create_task.html', form=form)
 
 
-# ЗАВТРА НА ФАСТАПИ ПЕРЕПИШУ!!!!
 @app.post('/tasks/change_status')
 @login_required
 def change_status():
@@ -51,11 +51,13 @@ def change_status():
     status = request.form.get('status')
     task_id = request.form.get('task_id')
 
-    with Session.begin() as session:
-        task = session.scalar(select(Task).where(Task.id == int(task_id), Task.user_id == current_user.id))
-        if task:
-            task.status = status
-            flash('Статус обновлен', 'info')
-            return redirect(url_for('show_status_dashboard'))
+    data = {
+        'status': status,
+        'id': task_id
+    }
 
-        return redirect(url_for('show_status_dashboard'))
+    response = requests.patch(
+        f'{API_URL}/tasks/{task_id}/{current_user.id}', json=data)
+
+    flash('Статус обновлен', 'info')
+    return redirect(url_for('show_status_dashboard'))

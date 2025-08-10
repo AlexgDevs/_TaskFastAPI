@@ -9,7 +9,7 @@
 {% block content %}
 <div class="user-about">
     <span>Присоединился: {{ user.joined.strftime('%d.%m.%Y') }}</span>
-    <span>Выполнено задач: 0</span>
+    <span>Выполнено задач: {{ total_done_tasks }}</span>
 </div>
 
 <div class="filter-container">
@@ -35,19 +35,16 @@
 {% block scripts %}
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-    // Фильтры
     document.getElementById('filterBtn').addEventListener('click', function() {
         document.getElementById('filterDropdown').classList.toggle('show');
     });
 
-    // Закрытие фильтров при клике вне
     window.addEventListener('click', function(e) {
         if (!e.target.matches('#filterBtn') && !e.target.closest('.filter-dropdown')) {
             document.getElementById('filterDropdown').classList.remove('show');
         }
     });
 
-    // Открытие модального окна задачи
     document.querySelectorAll('.task-card').forEach(card => {
         card.addEventListener('click', function() {
             const taskId = this.nextElementSibling.id.split('-')[1];
@@ -57,7 +54,6 @@
         });
     });
 
-    // Закрытие модальных окон
     document.querySelectorAll('.modal-close, .status-modal-close').forEach(btn => {
         btn.addEventListener('click', function() {
             const modal = this.closest('.modal-overlay');
@@ -68,7 +64,6 @@
         });
     });
 
-    // Открытие модального окна смены статуса
     document.querySelectorAll('.modal-btn-open-status').forEach(btn => {
         btn.addEventListener('click', function(e) {
             e.stopPropagation();
@@ -85,7 +80,6 @@
         });
     });
 
-    // Закрытие при клике вне модального окна
     document.querySelectorAll('.modal-overlay').forEach(modal => {
         modal.addEventListener('click', function(e) {
             if (e.target === this) {

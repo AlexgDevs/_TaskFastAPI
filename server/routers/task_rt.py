@@ -98,3 +98,19 @@ def delete_task(task_id: int):
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail='Task not found'
             )
+
+
+@task_app.patch('/{task_id}/{user_id}')
+def change_status(task_id: int, user_id: int, task_data: TaskPatchUpdate):
+    with Session.begin() as session:
+        task = session.scalar(select(Task).where(Task.id == task_id, Task.user_id == user_id))
+        if task:
+            update_data = task_data.model_dump(exclude_unset=True)
+            session.merge(Task(id=task_id, **update_data))
+            return {'status': 'patch updated'}
+
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail='Task not found'
+            )

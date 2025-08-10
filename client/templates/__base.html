@@ -27,7 +27,7 @@
         </h1>
         <ul class="nav-items">
             <li class="nav__item"><a href="{{ url_for('show_projects') }}">Мои проекты</a></li>
-            <li class="nav__item"><a href="#">Мой прогресс</a></li>
+            <li class="nav__item"><a href="{{ url_for('show_status_dashboard') }}">Мой прогресс</a></li>
             {% if user.role == 'admin' %}
             <li class="nav__item"><a href="#">Список пользователей</a></li>
             <li class="nav__item"><a href="#">Назначить админом</a></li>
