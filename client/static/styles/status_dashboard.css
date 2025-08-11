@@ -2,17 +2,16 @@
 
 
     :root {
-        --primary: #4361ee;       /* Основной синий */
-        --primary-light: #e6e9ff; /* Светло-синий */
-        --primary-dark: #3a56d4;  /* Темно-синий */
-        --text: #2b2d42;         /* Основной текст */
-        --text-light: #6c757d;    /* Второстепенный текст */
-        --bg: #ffffff;           /* Фон */
-        --card-bg: #f8f9fa;      /* Фон карточек */
-        --border: #e9ecef;       /* Границы */
-        --shadow: 0 4px 20px rgba(0,0,0,0.08); /* Тени */
+        --primary: #4361ee;       
+        --primary-light: #e6e9ff;
+        --primary-dark: #3a56d4;
+        --text: #2b2d42;        
+        --text-light: #6c757d; 
+        --bg: #ffffff; 
+        --card-bg: #f8f9fa;     
+        --border: #e9ecef; 
+        --shadow: 0 4px 20px rgba(0,0,0,0.08);
         
-        /* Цвета статусов */
         --not-started: #adb5bd;
         --in-progress: #4361ee;
         --in-review: #ffb700;

@@ -20,6 +20,7 @@
     {% endif %}
     {% endwith %}
     {% endblock %}
+
     {% block nav %}
     <div class="nav-container">
         <h1 class="logo nav-items">
@@ -35,7 +36,7 @@
         </ul>
         <ul class="nav-items">
             <li class="nav__item"><a href="{{ url_for('logout_page') }}">Выйти</a></li>
-            <li class="nav__item"><a href="#">Настройки профиля</a></li>
+            <li class="nav__item"><a href="{{ url_for('show_profile') }}">Настройки профиля</a></li>
         </ul>
     </div>
     {% endblock %}

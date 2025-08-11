@@ -99,8 +99,7 @@ def logout_cancel():
 @app.get('/auth/profile/change-page')
 @login_required
 def change_profile_page():
-    form = ChangeProfileForm()
-    return render_template('profile_settings.html', form=form)
+    return redirect(url_for('show_profile'))
 
 
 @app.post('/auth/profile/change')
@@ -113,7 +112,7 @@ def change_profile():
             if user:
                 if not check_password_hash(user.password, form.password.data):
                     flash('Неверный пароль', 'error')
-                    return render_template('profile_settings.html', form=form)
+                    return redirect(url_for('show_profile'))
 
         data = {
             'name': form.name.data,
@@ -122,6 +121,6 @@ def change_profile():
         response = requests.patch(f'{API_URL}/users/{current_user.id}', json=data)
 
         flash('Успешно обновлено', 'info')
-        return redirect(url_for('change_profile_page'))
+        return redirect(url_for('show_profile'))
     
-    return render_template('profile_settings.html', form=form)
+    return redirect(url_for('show_profile'))

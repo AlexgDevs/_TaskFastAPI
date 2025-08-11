@@ -35,7 +35,7 @@ class TaskForm(FlaskForm):
             raise ValidationError('Дедлайн должен быть в будущем')
         
         return field.data
-    
+
 
 class TaskPatchForm(FlaskForm):
     title = StringField('Название', validators=[

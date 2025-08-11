@@ -1,28 +1,40 @@
 {% from '__helpers.html' import form_generate %}
-<!DOCTYPE html>
-<html lang="en">
+{% extends '__base.html' %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/static/styles/__helpers.css">
-</head>
 
-</html>
-
-{% with messages = get_flashed_messages(with_categories=true) %}
-{% if messages %}
-{% for category, message in messages %}
-<div class="alert alert-{{ category }}">
-    {{ message }}
+{% block content %}
+<div class="profile-section">
+    <div class="profile-info">
+        <div class="general-info">
+            <h2>Основная информация</h2>
+            <span><strong>Имя: </strong>{{ user.name }}</span>
+            <span><strong>Присоеденился: </strong>{{ user.joined.strftime('%Y.%m.%d') }}</span>
+            <span><strong>Почта: </strong>-</span>
+            <span><strong>Роль на сайте: </strong>{% if user.role == 'user' %}Пользователь{% elif user.role == 'admin' %}Админ{% endif %}</span>
+        </div>
+        
+        <div class="project-info">
+            <h3>Информация по проектам</h3>
+            <span><strong>Всего задач: </strong>{{ user.tasks | length }}</span>
+            <span><strong>Всего проектов: </strong>{{ user.projects | length }}</span>
+        </div>
+        
+        <div class="circle-diagrams-status">
+            <h3>Статистика выполнения задач:</h3>
+            <img src="data:image/png;base64,{{ chart_image }}" alt="Статистика задач">
+            <ul class="circle-diagrams-legend">
+                <li class="legend-item">НН - Не начаты</li>
+                <li class="legend-item">ВП - В процессе</li>
+                <li class="legend-item">НП - На проверке</li>
+                <li class="legend-item">СГ - Сгорел (вышел дедлайн)</li>
+                <li class="legend-item">ГТ - Готов</li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="profile-section-form">
+        <h4>Изменить профиль</h4>
+        {{ form_generate(form=form, action='/auth/profile/change') }}
+    </div>
 </div>
-{% endfor %}
-{% endif %}
-{% endwith %}
-
-
-
-
-<div class="profile-section-form">
-    {{ form_generate(form=form, action='/auth/profile/change') }}
-</div>
+{% endblock %}
