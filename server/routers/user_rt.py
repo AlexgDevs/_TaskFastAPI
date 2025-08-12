@@ -1,5 +1,5 @@
 from typing import List
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, Query, status
 from sqlalchemy import select
 
 from ..db import (
@@ -17,7 +17,7 @@ user_app = APIRouter(prefix='/users', tags=['Users'])
 
 # получение всех пользователей
 @user_app.get('/', response_model=List[UserResponse])
-def get_users():
+def get_users(role: str = Query(None)):
     with Session() as session:
         users = session.scalars(select(User)).all()
         users_data = [UserResponse.model_validate(user) for user in users]

@@ -9,6 +9,9 @@ class UserResponse(BaseModel): # вывод пользователя
     name: str
     role: str
 
+    class Config:
+        from_attributes = True
+
 
 TaskStatus = Literal['not_started', 'in_progress', 'in_review', 'done', 'burned_down']
 class TaskResponse(BaseModel): # вывод задачи
@@ -19,6 +22,7 @@ class TaskResponse(BaseModel): # вывод задачи
     dead_line: datetime
     status: TaskStatus
     user_id: int
+    photo: str | None = None
 
     class Config:
         from_attributes = True

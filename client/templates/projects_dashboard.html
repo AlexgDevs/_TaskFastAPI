@@ -15,6 +15,9 @@
                 {% for task in project.get('tasks', []) %}
                 <div class="project_task-content" onclick="openTaskModal(this)">
                     <div class="task__content-title">
+                        {% if task.get('photo') %}
+                        <img src="data:image/png;base64,{{ task.get('photo') }}" alt="{{ task.get('title')[:15] }}..." width="250px" height="50px" style="border-radius: 10px;">
+                        {% endif %}
                         {{ task.get('title') }}
                         <span>{{ task.get('created_at') }}</span>
                     </div>

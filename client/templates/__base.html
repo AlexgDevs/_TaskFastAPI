@@ -30,8 +30,8 @@
             <li class="nav__item"><a href="{{ url_for('show_projects') }}">Мои проекты</a></li>
             <li class="nav__item"><a href="{{ url_for('show_status_dashboard') }}">Мой прогресс</a></li>
             {% if user.role == 'admin' %}
-            <li class="nav__item"><a href="#">Список пользователей</a></li>
-            <li class="nav__item"><a href="#">Назначить админом</a></li>
+            <li class="nav__item"><a href="{{ url_for('get_all_users') }}">Список пользователей</a></li>
+            <li class="nav__item"><a href="{{ url_for('get_all_admins') }}">Список администраторов</a></li>
             {% endif %}
         </ul>
         <ul class="nav-items">

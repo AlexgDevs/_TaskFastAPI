@@ -9,7 +9,7 @@ from ..db import Session, User, Project
 
 
 class ProjectForm(FlaskForm):
-    title = StringField('Название задачи', validators=[
+    title = StringField('Название проекта', validators=[
         DataRequired(message='Обязательное поле'),
         Length(max=50, message='Максимальное колличество символов - 50')
     ])

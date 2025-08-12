@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Dict, Literal, Union
+from typing import Dict, Literal, Union, ByteString
 from pydantic import BaseModel, Field, field_validator
 
 
@@ -9,6 +9,7 @@ class TaskCreate(BaseModel): # Создание таска
     dead_line: str
     user_id: int
     project_id: int
+    photo: str | None = None
 
     @field_validator('dead_line')
     def validate_dead_line(cls, dead_line: str) -> datetime:

@@ -2,6 +2,7 @@ from flask import flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 import requests
 from sqlalchemy import select
+from base64 import b64encode
 
 from ..schemas import TaskForm, TaskPatchForm
 from .. import app, API_URL
@@ -24,15 +25,20 @@ def create_task():
     form = TaskForm()
     if form.validate_on_submit():
 
-        data = {
+        file = form.photo.data
+        file.seek(0)
+        file_bs64 = b64encode(file.read()).decode()
+
+        data_form = {
             'title': form.title.data,
             'description': form.description.data,
             'dead_line': form.dead_line.data.strftime('%Y.%m.%d'),
             'user_id': current_user.id,
-            'project_id': request.form.get('project_id')
+            'project_id': request.form.get('project_id'),
+            'photo': file_bs64
         }
 
-        response = requests.post(f'{API_URL}/tasks', json=data)
+        response = requests.post(f'{API_URL}/tasks', json=data_form)
         if response.status_code == 201:
             flash('Вы успешно создали задачу!', 'info')
             return redirect(url_for('show_projects'))

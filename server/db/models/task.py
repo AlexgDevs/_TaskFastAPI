@@ -15,6 +15,7 @@ class Task(Base):
     created_at: Mapped[DateTime] = mapped_column(DateTime, default=datetime.now)
     status: Mapped[Literal['not_started', 'in_progress', 'in_review', 'done', 'burned_down']] = mapped_column(default='not_started')
     dead_line: Mapped[datetime] = mapped_column(DateTime, nullable=False)
+    photo: Mapped[str] = mapped_column(nullable=True)
 
     user_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
     user: Mapped['User'] = relationship('User', back_populates='tasks', uselist=False)
