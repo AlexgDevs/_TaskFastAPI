@@ -32,8 +32,16 @@ class RegisterForm(FlaskForm):
         ]
     )
 
-
     submit = SubmitField('Зарегестрироваться')
+
+    def validate_name(self, field):
+        with Session() as session:
+            user = session.scalar(select(User).where(User.name == field.data))
+            if user:
+                raise ValidationError('Имя пользователя уже существует')
+
+            return field.data
+
 
 class LoginForm(FlaskForm):
     name = StringField(
@@ -52,11 +60,30 @@ class LoginForm(FlaskForm):
 
     submit = SubmitField('Войти')
 
+    def validate_name(self, field):
+        with Session() as session:
+            user = session.scalar(select(User).where(User.name == field.data))
+            if not user:
+                raise ValidationError('Пользователь не найден')
+
+            return field.data
+
+    def validate_password(self, field):
+        with Session() as session:
+            user = session.scalar(select(User).where(
+                User.name == self.name.data))
+            if user:
+                if not check_password_hash(user.password, field.data):
+                    raise ValidationError('Неверный пароль')
+
 
 class ChangeProfileForm(FlaskForm):
+    last_name = StringField('Текущее имя', validators=[
+        Length(max=150, message='Максимальное кол-во символов -- 150')
+    ])
 
     name = StringField(
-        'Имя',
+        'Новое имя',
         validators=[
             Length(max=150, message='Максимальное кол-во символов -- 150')
         ]
@@ -75,3 +102,19 @@ class ChangeProfileForm(FlaskForm):
     # cooming soon...
 
     submit = SubmitField('Изменить')
+
+    def validate_last_name(self, field):
+        with Session() as session:
+            user = session.scalar(select(User).where(User.name == field.data))
+            if not user:
+                raise ValidationError('Некорректное имя')
+            return field.data
+
+    def validate_password(self, field):
+        with Session() as session:
+            user = session.scalar(select(User).where(
+                User.name == self.last_name.data))
+            if user:
+                if not check_password_hash(user.password, field.data):
+                    raise ValidationError('Неверный пароль для текущего имени')
+                return field.data

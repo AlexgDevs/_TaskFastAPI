@@ -29,10 +29,6 @@ def register():
     form = RegisterForm()
     if form.validate_on_submit():
         with Session.begin() as session:
-            user = session.scalar(select(User).where(User.name == form.name.data))
-            if user:
-                flash('Имя пользователя занято', 'error')
-                return render_template('register.html', form=form)
 
             new_user = User(
                 name=form.name.data,
@@ -62,17 +58,9 @@ def login():
         with Session() as session:
             user = session.scalar(select(User).where(User.name == form.name.data))
             if user:
-                if check_password_hash(user.password, form.password.data):
-                    login_user(LoginUser(id=user.id, name=user.name, role=user.role))
-                    flash('Вы успешно вошли в аккаунт!', 'info')
-                    return redirect(url_for('show_status_dashboard'))
-                else:
-                    flash('Неверный логин или пароль', 'error')
-                    return render_template('login.html', form=form)
-            else:
-                flash('Имя пользователя не найдено', 'error')
-                return render_template('login.html', form=form)
-
+                login_user(LoginUser(id=user.id, name=user.name, role=user.role))
+                flash('Вы успешно вошли в аккаунт!', 'info')
+                return redirect(url_for('show_status_dashboard'))
     else:
         return render_template('login.html', form=form)
 
@@ -107,12 +95,6 @@ def change_profile_page():
 def change_profile():
     form = ChangeProfileForm()
     if form.validate_on_submit():
-        with Session() as session:
-            user = session.scalar(select(User).where(User.id == current_user.id))
-            if user:
-                if not check_password_hash(user.password, form.password.data):
-                    flash('Неверный пароль', 'error')
-                    return redirect(url_for('show_profile'))
 
         data = {
             'name': form.name.data,
@@ -123,4 +105,5 @@ def change_profile():
         flash('Успешно обновлено', 'info')
         return redirect(url_for('show_profile'))
     
-    return redirect(url_for('show_profile'))
+    flash('Неверное имя или пароль', 'error')
+    return redirect(url_for('show_profile', form=form))
