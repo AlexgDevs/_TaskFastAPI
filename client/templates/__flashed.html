@@ -1,0 +1,130 @@
+{% block flashed %}
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+<div class="flash-modal-overlay">
+    {% for category, message in messages %}
+    <div class="flash-modal flash-{{ category }}">
+        <div class="flash-content">
+            {{ message }}
+        </div>
+        <button class="flash-close-btn">&times;</button>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+{% endwith %}
+{% endblock %}
+
+{% block flashed_styles %}
+<style>
+    .flash-modal-overlay {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1000;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .flash-modal {
+        position: relative;
+        padding: 15px 40px 15px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        color: white;
+        min-width: 250px;
+        max-width: 350px;
+        animation: slideIn 0.3s ease-out;
+        transform: translateX(0);
+    }
+
+    .flash-success {
+        background: #00a76f;
+        border-left: 4px solid #007a52;
+    }
+
+    .flash-error {
+        background: #f94144;
+        border-left: 4px solid #d13437;
+    }
+
+    .flash-warning {
+        background: #ffb700;
+        border-left: 4px solid #e6a500;
+    }
+
+    .flash-info {
+        background: #4361ee;
+        border-left: 4px solid #3a56d4;
+    }
+
+    .flash-close-btn {
+        position: absolute;
+        top: 8px;
+        right: 10px;
+        background: none;
+        border: none;
+        color: white;
+        font-size: 20px;
+        cursor: pointer;
+        opacity: 0.8;
+        transition: opacity 0.2s;
+    }
+
+    .flash-close-btn:hover {
+        opacity: 1;
+    }
+
+    @keyframes slideIn {
+        from {
+            transform: translateX(100px);
+            opacity: 0;
+        }
+
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+
+    @keyframes fadeOut {
+    from { opacity: 1; transform: translateX(0); }
+    to { opacity: 0; transform: translateX(100px); }
+}
+
+</style>
+{% endblock %}
+
+{% block flashed_script %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const closeButtons = document.querySelectorAll('.flash-close-btn');
+
+        closeButtons.forEach(btn => {
+            btn.addEventListener('click', function () {
+                this.closest('.flash-modal').style.animation = 'fadeOut 0.3s ease-out';
+                setTimeout(() => {
+                    this.closest('.flash-modal').remove();
+
+                    if (!document.querySelector('.flash-modal')) {
+                        document.querySelector('.flash-modal-overlay').remove();
+                    }
+                }, 300);
+            });
+        });
+
+        document.querySelectorAll('.flash-modal').forEach(modal => {
+            setTimeout(() => {
+                modal.style.animation = 'fadeOut 0.3s ease-out';
+                setTimeout(() => {
+                    modal.remove();
+                    if (!document.querySelector('.flash-modal')) {
+                        document.querySelector('.flash-modal-overlay')?.remove();
+                    }
+                }, 300);
+            }, 5000);
+        });
+    });
+</script>
+{% endblock %}

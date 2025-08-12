@@ -1,3 +1,5 @@
+{% include '__flashed.html' %}
+
 <div class="logout-container">
     <h1 class="logout-title">Выход из аккаунта</h1>
     <p class="logout-message">Вы уверены, что хотите выйти?</p>
@@ -10,16 +12,6 @@
         </form>
     </div>
 </div>
-
-{% with messages = get_flashed_messages(with_categories=true) %}
-{% if messages %}
-{% for category, message in messages %}
-<div class="alert alert-{{ category }}">
-    {{ message }}
-</div>
-{% endfor %}
-{% endif %}
-{% endwith %}
 
 
 <style>
