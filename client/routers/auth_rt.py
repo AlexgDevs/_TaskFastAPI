@@ -1,11 +1,23 @@
-from flask import flash, redirect, render_template, url_for
+from datetime import datetime
+from flask import flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required, login_user, logout_user
 import requests
 from sqlalchemy import select
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from ..schemas import RegisterForm, LoginForm, ChangeProfileForm
-from ..utils import LoginUser, admin_requried, required_not_authenticated
+from ..schemas import RegisterForm, LoginForm, ChangeProfileForm, VerificationCodeForm
+from ..utils import (
+    LoginUser,
+    admin_requried,
+    required_not_authenticated,
+    create_verifi_code,
+    send_verification_code,
+    smtp_server,
+    smtp_port,
+    from_email,
+    pwd
+    )
+
 from ..db import Session, User
 from .. import app, API_URL
 
@@ -27,27 +39,52 @@ def login_page():
 @required_not_authenticated
 def register():
     form = RegisterForm()
+    ver_form = VerificationCodeForm()
     if form.validate_on_submit():
         with Session.begin() as session:
 
+            code = create_verifi_code()
+
             new_user = User(
                 name=form.name.data,
-                password=generate_password_hash(form.password.data)
+                password=generate_password_hash(form.password.data),
+                email=form.email.data,
+                verifi_code=code['code']
             )
 
             session.add(new_user)
             session.flush()
 
-            login_user(LoginUser(
-                id=new_user.id,
-                name=new_user.name,
-                role=new_user.role))
-
-            flash('Вы успешно авторизовались', 'info')
-            return redirect(url_for('show_status_dashboard'))
+            send_verification_code(from_email, new_user.email, smtp_server, smtp_port, pwd, code['code'])
+            return render_template('email_verification.html', ver_form=ver_form, exp=code['exp'], user_id=new_user.id)
 
     else:
         return render_template('register.html', form=form)
+
+
+@app.post('/send/verification_code')
+def check_code():
+    ver_form = VerificationCodeForm()
+    if ver_form.validate_on_submit():
+        with Session.begin() as session:
+            user = session.scalar(select(User).where(User.id == int(request.form.get('user_id'))))
+            if user:
+
+                if user.verifi_code != ver_form.code.data:
+                    flash('Неверный код', 'error')
+                    return render_template('email_verification.html', ver_form=ver_form)
+                
+                if datetime.fromisoformat(request.form.get('code_exp')) < datetime.now():
+                    flash('Время работы кода истекло!', 'error')
+                    session.delete(user) #можно на фастапи перенести
+                    return redirect(url_for('register_page'))
+
+                login_user(LoginUser(id=user.id, name=user.name, role=user.role))
+                flash('Успешно авторизовались', 'info')
+                user.verifi_code = None
+                return redirect(url_for('show_status_dashboard'))
+    
+    return render_template('email_verification.html', ver_form=ver_form, exp=request.form.get('exp'), user_id=request.form.get('user_id'))
 
 
 @app.post('/auth/login')

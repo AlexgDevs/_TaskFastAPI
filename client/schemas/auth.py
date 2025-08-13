@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from sqlalchemy import select
 from flask_login import current_user
-from wtforms import StringField, SubmitField, PasswordField, ValidationError, validators
+from wtforms import StringField, SubmitField, PasswordField, ValidationError, validators, EmailField
 from wtforms.validators import Length, EqualTo, DataRequired
 from werkzeug.security import check_password_hash
 
@@ -16,7 +16,9 @@ class RegisterForm(FlaskForm):
         ],
     )
 
-    # потом почта будет
+    email = EmailField('Почта', validators=[
+        DataRequired('Обязательное поле')
+    ])
 
     password = PasswordField(
         'Пароль', validators=[
@@ -41,6 +43,15 @@ class RegisterForm(FlaskForm):
                 raise ValidationError('Имя пользователя уже существует')
 
             return field.data
+
+
+class VerificationCodeForm(FlaskForm):
+    code = StringField('Код поддтверждения', validators=[
+        DataRequired('Обязательное поле'),
+        Length(min=6, max=6, message='Код из 6 цифр')
+    ])
+
+    submit = SubmitField('Отправить')
 
 
 class LoginForm(FlaskForm):

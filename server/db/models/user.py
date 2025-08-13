@@ -11,6 +11,8 @@ class User(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(150))
     password: Mapped[str] = mapped_column(String(255))
+    email: Mapped[str]
+    verifi_code: Mapped[str]
     joined: Mapped[DateTime] = mapped_column(DateTime, default=datetime.now)
     role: Mapped[Literal['user', 'admin', 'moderator']] = mapped_column(default='user')
 

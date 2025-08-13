@@ -1,5 +1,6 @@
-{% from '__helpers.html' import form_generate %}
 {% include '__flashed.html' %}
+{% from '__helpers.html' import form_generate %}
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -10,6 +11,7 @@
 </head>
 </html>
 
-<div class="creating-project-container">
-    {{ form_generate(ver_form, '/projects/create') }}
+
+<div class="verification-container">
+    {{ form_generate(ver_form, '/send/verification_code', exp=exp, user_id=user_id) }}
 </div>

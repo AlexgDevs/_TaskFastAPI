@@ -16,6 +16,11 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
+smtp_server = 'smtp.gmail.com'
+smtp_port = 587
+from_email = 'calozinbr2@gmail.com'
+pwd = 'duex yspb kivh jfrw'
+
 
 class LoginUser(UserMixin):
     def __init__(self, id, name, role):
