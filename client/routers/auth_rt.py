@@ -80,8 +80,8 @@ def check_code():
                     return redirect(url_for('register_page'))
 
                 login_user(LoginUser(id=user.id, name=user.name, role=user.role))
+                user.email_confirmation = True
                 flash('Успешно авторизовались', 'info')
-                user.verifi_code = None
                 return redirect(url_for('show_status_dashboard'))
     
     return render_template('email_verification.html', ver_form=ver_form, exp=request.form.get('exp'), user_id=request.form.get('user_id'))

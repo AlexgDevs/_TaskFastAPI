@@ -11,7 +11,8 @@
             <h2>Основная информация</h2>
             <span><strong>Имя: </strong>{{ user.name }}</span>
             <span><strong>Присоеденился: </strong>{{ user.joined.strftime('%Y.%m.%d') }}</span>
-            <span><strong>Почта: </strong>-</span>
+            <span><strong>Почта: {{ user.email }}</strong>-</span>
+            <span><strong>Подтверждена: {% if user.email_confirmation == True %}Да{% else %}Нет{% endif %}</strong></span>
             <span><strong>Роль на сайте: </strong>{% if user.role == 'user' %}Пользователь{% elif user.role == 'admin' %}Админ{% endif %}</span>
         </div>
         
